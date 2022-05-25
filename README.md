@@ -6,7 +6,7 @@
 
 Hello! If you are reading this then we're likely in the process exploring an engineering role with us! If so, congratulations :tada: !
 
-In order to move forward, we'd like to know a little about how you work. To that end, this repository contains a set of **short, time-boxed** (approximately 1-3 hours max) that you can use demonstrate your skills and abilities.
+In order to move forward, we'd like to know a little about how you work. To that end, this repository contains a set of **short, time-boxed** (approximately 1-3 hours max) coding assessments that you can use demonstrate your skills and abilities.
 
 Please don't spend more than a few hours on this, we value your time and appreciate you considering taking a role with us.
 
