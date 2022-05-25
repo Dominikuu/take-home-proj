@@ -3,7 +3,7 @@
 ```
 TIMEBOX:    2-3 hours max. We mean it! Set at timer and hard-stop at 3 hours ⏱
 LANGUAGES:  Python, Javascript, SQL
-FRAMEWORKS: Django, Flask, NodeJS, etc (Exercise B can be pure SQL)
+FRAMEWORKS: Django, Flask, NodeJS, etc
 TESTS:      nice to have, but not mandatory
 DOCS:       nice to have, but not mandatory
 ```
