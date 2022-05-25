@@ -12,7 +12,7 @@ Please don't spend more than a few hours on this, we value your time and appreci
 
 The goal of this take home test is to give you an asynchronous medium for demonstrating how you would break down a set of user stories and requirements into something akin to a rapid POC/spike. There is no grading or scoring, nor is it pass-fail, rather this is meant to serve a sample of your thought processes as an engineer. We know that 3 hours is not a lot of time and you will both not be able to complete everything you'd like, and will feel pressure to do more. Please truly hold yourself to 3 hours max and make sure to create a `ROADMAP.md` file as outlined in the instructions below.
 
-## First, a few words about asynchronous/take-home exercises
+## First, a few words about asynchronous/take-home exercise
 
 The primary reasons we ask candidates of *all* levels to complete this exercise is as follows.
 
