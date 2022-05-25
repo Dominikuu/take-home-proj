@@ -32,7 +32,7 @@ The primary reasons we ask candidates of *all* levels to complete this exercise 
 
 2. Read the `instructions.md` file in the matching directory. Be sure to read the instructions carefully and ask any clarifying questions by emailing david@web3platforms.com
 
-3. Create a new **private repository** for your exercise and our team as private collaborators (We do this to preserve your anonymity so it's not obvious you are looking for a new tole.). You can add our main GH account as a private collaborator: https://github.com/Web3Platforms
+3. Create a new **private repository** for your exercise and add our team as private collaborators (We do this to preserve your anonymity so it's not obvious you are looking for a new role). You can add our main GH account as a private collaborator: https://github.com/Web3Platforms
 
 4. Complete as much of the exercise as you can in 3 hours or less. Unless otherwise specified in the `instructions.md` document, you can use any language, framework, or toolchain you wish.
 
