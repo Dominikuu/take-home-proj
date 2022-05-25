@@ -2,7 +2,7 @@
 
 ------------------
 
-# Hiring @ Welcome
+# Hiring @ Web3 Platforms Inc.
 
 Hello! If you are reading this then we're likely in the process exploring an engineering role with us! If so, congratulations :tada: !
 
