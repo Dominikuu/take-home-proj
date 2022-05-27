@@ -51,4 +51,4 @@ The primary reasons we ask candidates of *all* levels to complete this exercise 
 
 5. When complete email a link to the repository and any special instructions to david@web3platforms.com
 
-6. Sit back and relax. We'll review your submission and get back to you within 48 hours :smiley:
+6. Sit back and relax. We'll review your submission and get back to you shortly :smiley:
