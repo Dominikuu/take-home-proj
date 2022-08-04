@@ -14,13 +14,11 @@ This exercise is to implement the best possible solution to one of the exercises
 
 Ideally your solution would have some way to run locally and test the results so we can fully analyze your efforts.
 
-## Choose **One** Of the following
-
 ---
 
 > :rotating_light: :exclamation: :point_right: **Please use one of the salary datasets provided here for either exercise [/shared/salary_datasets](/shared/salary_datasets)** :point_left: :exclamation: :rotating_light:
 
-### Exercise A: Expose an API for querying compensation data
+### Exercise: Expose an API for querying compensation data
 
 The goal of this exercise is to design a read-only API (REST or GraphAPI) that returns one or more records from static set of compensation data.
 
@@ -34,7 +32,7 @@ The goal of this exercise is to design a read-only API (REST or GraphAPI) that r
 * have the JSON response be normalized into a uniform schema via a serializer or json template
   * **Stretch Goal**: serialize more than one compensation [data set](/shared/salary_datasets)
 
-### A few quick notes on submitting Exercise A
+### A few quick notes on submitting the Exercise
 
 * Don't worry about any web application concerns other than serializing JSON and returning via a GET request.
 * The example above (`/compensation_data`...) is not a contract. Feel free to design the URL structure and JSON schema that you believe creates the best client/consumer experience
