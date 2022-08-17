@@ -49,6 +49,6 @@ The primary reasons we ask candidates of *all* levels to complete this exercise 
     * a super-simple test suite if applicable (even one test is a bonus)
     * Some form of lightweight technical documentation (code comments are fine)
 
-5. When complete email a link to the repository and any special instructions to david@web3platforms.com
+5. When complete email a link to the repository and any special instructions to your recruiter.
 
 6. Sit back and relax. We'll review your submission and get back to you shortly :smiley:
