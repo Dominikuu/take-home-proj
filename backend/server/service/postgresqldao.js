@@ -6,48 +6,29 @@ const mapper              = require('./mapper');
 const pgDaoUtils          = require('./utils');
 const pgQueryExtender     = require('./query-extender');
 
-const pool = new pg.Pool({
-    user: 'admin',
-    host: 'localhost',
-    database: 'salary',
-    password: 'password',
-    port: 5432,
-});
-
 function PostgresSqlDao(options) {
     const _this=this
     if (_.isEmpty(options) || !_.isObject(options)) {
         throw new Error('Options argument is missing or is not an object');
     }
     
-    if (_.isEmpty(options.connectTo) || !_.isString(options.connectTo)) {
+    if (_.isEmpty(options.connectTo) || !_.isObject(options.connectTo)) {
         throw new Error('ConnectTo option is missing or is not a string.');
     }
     
-    if (_.isEmpty(options.table) || !_.isString(options.table)) {
-        throw new Error('Table argument is missing or is not a string.');
-    }
-    
-    // if (_.isEmpty(options.fields) || !_.isArray(options.fields)) {
-    //     throw new Error('Fields argument is missing or is not an array.');
-    // }
-    
     this._connStr = options.connectTo;
-    this._table = options.table;
-    // this._fields = options.fields;
     this._instanceFactory = options.instanceFactory || null;
-    // console.log(options)
     this._fetchInterceptors = options.interceptors && options.interceptors.fetch ? options.interceptors.fetch : []; 
     return new Promise(function (resolve, reject) {
-        pool.connect(options.connectTo, function (err, client, done) {
+        (new pg.Pool(options.connectTo)).connect( function (err, client, done) {
             if (err) {
                 done();
                 reject(err);
-                console.log(err)
                 return;
             }
             console.log('DB connected')
-            resolve(client)
+            _this.dbConnection = client
+            resolve(_this)
         })
     })
 }
@@ -90,14 +71,14 @@ PostgresSqlDao.prototype.save = function (entity) {
     return promise;
 };
 
-PostgresSqlDao.prototype.find = function (id) {
+PostgresSqlDao.prototype.find = function (table, fields, id) {
     let self = this;
     
     return new Promise(function (resolve, reject) {
         PostgresSqlDao.queryByFields({
             connectTo: self.connectTo(),
-            table: self.table(),
-            fields: self.fields(),
+            table: table,
+            fields: fields,
             filter: [ 'id', '=', id ]
         })
         .then(function (result) {
@@ -129,8 +110,8 @@ PostgresSqlDao.prototype.all = function (options) {
     let promise = new Promise(function (resolve, reject) {
         PostgresSqlDao.queryByFields({
             connectTo: self.connectTo(),
-            table: self.table(),
-            fields: self.fields(),
+            table: options.table,
+            fields: options.fields,
             filter: options.filter,
             sorting: options.sorting,
             paging: options.paging
@@ -158,7 +139,8 @@ PostgresSqlDao.rawTransformedQuery = function (options) {
     }
     
     return new Promise(function (resolve, reject) {
-        pool.connect(options.connectTo, function (err, client, done) {
+        // console.log(options)
+        (new pg.Pool(options.connectTo)).connect(function (err, client, done) {
             if (err) {
                 done();
                 reject(err);
@@ -193,10 +175,8 @@ PostgresSqlDao.queryByFields = function (options) {
     
     let fieldList = pgDaoUtils.createSelectFieldList(options.fields);
     let query = 'SELECT ' + fieldList + ' FROM "' + options.table + '"';
-    
     let extendedQuery = pgQueryExtender
         .extend(query, options.filter, options.sorting, options.paging);
-    
     return PostgresSqlDao.rawTransformedQuery({
         connectTo: options.connectTo,
         query: extendedQuery.query,

@@ -1,6 +1,7 @@
 BEGIN TRANSACTION;
 
 CREATE TABLE "salary" (
+    id uuid primary key default gen_random_uuid(),
     timestamp TEXT,
     employer TEXT,
     job_title TEXT,

@@ -62,12 +62,16 @@ let createUpdateFieldAndParamList = function (fields) {
 
 let createSelectFieldList = function (fields) {
     let result = '';
+    if (!fields || fields.length === 0) {
+        return '*'
+    }
     fields.forEach(function (it) {
         if (result) {
             result += ', ';
         }
         
-        result += '"' + mapper.camelCaseToUnderscore(it) + '"';
+        result += '' + mapper.camelCaseToUnderscore(it) + '';
+        // result += '"' + mapper.camelCaseToUnderscore(it) + '"';
     });
     
     return result;
