@@ -1,0 +1,23 @@
+<% layout('boilerplate') -%>
+    <form class="form-signin" id="register-form" name="registration">
+        <h1 class="h3 mb-4 font-weight-normal">SSO server Registration</h1>
+        <div class="line">
+            <input type="text" name="name" id="name" class="form-control" required autofocus>
+            <label for="name">Name</label>
+        </div>
+        <div class="line">
+            <input type="text" name="email" id="inputEmail" class="form-control" required autofocus>
+            <label for="inputEmail">Email address</label>
+        </div>
+        <div class="line">
+            <input type="password" name="password" id="inputPassword" class="form-control" required>
+            <label for="inputPassword">Password</label>
+        </div>
+        <div class="line">
+            <button class="btn btn-md primary btn-block submit" type="button" id="register">Register</button>
+        </div>
+        <div class="checkbox mb-4">
+            <span>Have an account?</span>
+            <span><a href="/simplesso/login">Login</a></span>
+        </div>
+    </form>

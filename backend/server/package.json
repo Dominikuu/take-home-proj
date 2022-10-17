@@ -1,0 +1,46 @@
+{
+    "name": "sso-server",
+    "version": "1.0.0",
+    "description": "\"A Single Sign On Server\"",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node index.js",
+        "start.dev": "nodemon --legacy-watch"
+    },
+    "keywords": [
+        "sso",
+        "node.js",
+        "sso-nodejs"
+    ],
+    "author": "Dominique",
+    "license": "ISC",
+    "dependencies": {
+        "bcrypt": "^5.0.1",
+        "binascii": "^0.0.2",
+        "body-parser": "^1.18.3",
+        "connect-redis": "^6.1.3",
+        "crypto-js": "^4.1.1",
+        "ejs": "^3.1.7",
+        "ejs-mate": "^2.3.0",
+        "express": "^4.18.1",
+        "express-flash-messages": "^0.1.1",
+        "express-session": "^1.17.3",
+        "hashids": "^1.2.2",
+        "jsonwebtoken": "^8.3.0",
+        "mongodb": "^3.2.6",
+        "morgan": "^1.9.0",
+        "nodemon": "^1.18.10",
+        "path-to-regexp": "^6.2.1",
+        "pg": "^7.4.0",
+        "redis": "^4.1.0",
+        "uuid": "^7.0.0"
+    },
+    "devDependencies": {
+        "axios": "^0.27.2",
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.0",
+        "express-validator": "^6.14.0",
+        "nodemailer": "^6.7.5"
+    }
+}
