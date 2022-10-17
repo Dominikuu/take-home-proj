@@ -49,7 +49,7 @@ const listAllSalary = async (req, res, next, dbDao) => {
     res.setHeader("Content-Type", "application/json");
     return res
     .status(200)
-    .json(results);
+    .json(JSON.stringify(results));
   
 }
 
@@ -71,7 +71,7 @@ const findOneSalary = async (req, res, next, dbDao) => {
         res.setHeader("Content-Type", "application/json");
         return res
         .status(200)
-        .json(results);
+        .json(JSON.stringify(results));
     } catch(err){
         return res
         .status(400)
