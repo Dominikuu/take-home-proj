@@ -21,4 +21,6 @@ COPY . .
 # USER app
 
 # CMD [ "npm", "run", "start" ]
+EXPOSE 3030
+
 CMD [ "npm", "run", "start.dev" ]
