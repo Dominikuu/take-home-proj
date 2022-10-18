@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {AlertColor} from '@mui/material';
 import {Alert, Snackbar} from 'lib/mui-shared';
-import { VerticalAlignBottom } from '@material-ui/icons';
+
 export interface WithSnackProps {
   loading?: boolean;
   snackbarShowMessage?: any;
@@ -52,7 +52,7 @@ function withSnackbar<P extends WithSnackProps>(
           autoHideDuration={duration}
           open={open}
           onClose={handleClose}
-          key={'bottom' + 'center'}
+          key={'bottomcenter'}
           // TransitionComponent={transition as React.ComponentType}
         >
           <Alert variant="filled" onClose={handleClose} severity={severity}>

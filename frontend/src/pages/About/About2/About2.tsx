@@ -2,7 +2,7 @@ import React from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
 // import Particle from "../Particle";
 // import Github from "./Github";
-import Particle from '../../Particle';
+// import Particle from '../../Particle';
 import Techstack from '../TechStack';
 // import Aboutcard from "./AboutCard";
 // import laptopImg from "../../Assets/about.png";
@@ -11,7 +11,7 @@ import './About2.scss';
 
 const About2 = () => (
   <Container fluid className="about2-section">
-    <Particle />
+    {/* <Particle /> */}
     <h1 className="project-heading">
       Professional <strong className="purple">Skillset </strong>
     </h1>

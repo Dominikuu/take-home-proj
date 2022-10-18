@@ -10,7 +10,7 @@ const user = JSON.parse(localStorage.getItem("user") as string);
 const initialState: AuthState = user
   ? { isLoggedIn: true, user }
   : { isLoggedIn: false, user: null };
-export default (state: AuthState = initialState, action: AnyAction): AuthState => {
+export default function authReducer(state: AuthState = initialState, action: AnyAction): AuthState {
   const { type, ...payload } = action;
   switch (type) {
     case ActionType.REGISTER_SUCCESS:

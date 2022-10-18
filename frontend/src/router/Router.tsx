@@ -1,9 +1,7 @@
-import React, {useState} from 'react';
-import {HashRouter, Route, Link} from 'react-router-dom';
-import {PrivatedRoutes} from './PrivateRoute';
 import Home from 'pages/Home/Home';
 import PostList from 'pages/Post-list/Post-list';
 import CreatePost from 'pages/Create-post/Create-post';
+import OfferList from 'pages/OfferList/OfferList'
 // import {PointToPoint, Software} from 'pages';
 
 // interface RouteWithSubRoutesPropsI {
@@ -112,9 +110,9 @@ export const MENU_CONFIG: {[key: string]: any} = {
   //     }
   //   ]
   // },
-  community: {
+  offer: {
     path: '/',
-    Component: PostList,
+    Component: OfferList,
     breadcrumbName: 'Community',
     routes: []
   },
@@ -146,80 +144,8 @@ export const MENU_CONFIG: {[key: string]: any} = {
       }
     ]
   }
-  // order: {
-  //   path: '/order',
-  //   Component: Home,
-  //   breadcrumbName: 'Order now',
-  //   routes: [
-  //     {
-  //       path: '/order/online-store',
-  //       Component: Home,
-  //       breadcrumbName: 'Online Store'
-  //     },
-  //     {
-  //       path: '/order/find-distributor',
-  //       Component: Home,
-  //       breadcrumbName: 'Find a Distributor'
-  //     },
-  //     {
-  //       path: 'become-distributor',
-  //       Component: Home,
-  //       breadcrumbName: 'Become a Distributor'
-  //     }
-  //   ]
-  // }
 };
 
 export const ROUTES: any[] = [
-  // {
-  //   path: '/',
-  //   Component: Home,
-  //   breadcrumbName: 'home',
-  //   exact: true
-  // },
   ...Object.values(MENU_CONFIG)
 ];
-
-// TODO:
-
-// export default function Router(): JSX.Element {
-//   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-//   return (
-//     <HashRouter>
-//       <div>
-//         <button type="button" onClick={(): void => setIsAuthenticated(!isAuthenticated)}>
-//           {isAuthenticated ? '登出' : '登入'}
-//         </button>
-
-//         <ul>
-//           <li>
-//             <Link to="/">Home</Link>
-//           </li>
-//           <li>
-//             <Link to="/about">About</Link>
-//           </li>
-//           <li>
-//             <Link to="/blog">Blog</Link>
-//           </li>
-//           <li>
-//             <Link to="/privateHome">PrivateHome</Link>
-//           </li>
-//         </ul>
-
-//         <hr />
-
-//         {ROUTES.map(
-//           (route): JSX.Element => (
-
-//             <React.Fragment key={route.path}>
-//               <RouteWithSubRoutes route={route} />
-//             </React.Fragment>
-//           )
-//         )}
-
-//         <PrivateRoute path="/privateHome" component={Home} isAuthenticated={isAuthenticated} />
-//       </div>
-//     </HashRouter>
-//   );
-// }

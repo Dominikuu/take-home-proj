@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Container} from 'react-bootstrap';
-import {Divider, List, ListItemButton, ListItemIcon, ListItemText, BookmarksIcon, Typography
+import {Divider, List, ListItemButton, ListItemIcon, ListItemText, BookmarksIcon
   ,Box, AccountBoxIcon, FolderIcon, SettingsIcon} from 'lib/mui-shared';
 import PublishedArticle from './PublishedArticle/PublishedArticle';
 import MyAccount from './MyAccount/MyAccount';

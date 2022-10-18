@@ -1,10 +1,10 @@
 import React, {useState, useEffect, MouseEvent} from 'react';
 import EventBus from 'eventing-bus';
-import {get, capitalize} from 'lodash'
+import {get} from 'lodash'
 import {useLocation, useSearchParams, useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {Container, Nav,Navbar, NavDropdown} from 'react-bootstrap';
-import {BlockEventType, CategroryColor} from 'common/shared.definition';
+import {BlockEventType} from 'common/shared.definition';
 import { styled, alpha } from '@mui/material/styles';
 import {Dispatch} from 'redux';
 import {globalSearch} from 'api/global-search'
@@ -15,7 +15,7 @@ import AuthModal from 'common/AuthModal/AuthModal';
 import {logout, checkAuth} from 'lib/auth/auth.action';
 import {LogLevel} from 'api/user/notifications'
 import {getUserUnreadCount} from 'api/user/notifications/unread-count'
-import {Avatar,  AccountCircleIcon, NotificationsIcon, Tooltip, SearchIcon, CircularProgress, InputBase, Box, TextField, Autocomplete} from 'lib/mui-shared';
+import {Avatar,  AccountCircleIcon, Tooltip, SearchIcon, CircularProgress, Box, Autocomplete} from 'lib/mui-shared';
 import logo from 'assets/img/logo.png';
 import './Navbar.scss';
 

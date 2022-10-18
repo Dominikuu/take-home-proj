@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {set as setProp, cloneDeep} from 'lodash';
-import {MENU_CONFIG} from 'router/Router';
-import {useNavigate, useLocation, useSearchParams} from 'react-router-dom';
+import {useNavigate,  useSearchParams} from 'react-router-dom';
 import {statisticPosts} from 'api/post';
 import EventBus from 'eventing-bus';
 import {BlockEventType} from 'common/shared.definition';

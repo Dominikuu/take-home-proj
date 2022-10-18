@@ -1,23 +1,19 @@
-import React, {Fragment, useMemo, useEffect, useState, useRef, CSSProperties} from 'react';
-import {Container, Row, Col, Button} from 'react-bootstrap';
-import {useDispatch, useSelector} from 'react-redux';
+import {useEffect, useState, useRef, CSSProperties} from 'react';
+import {Container, Row, Button} from 'react-bootstrap';
+import {useSelector} from 'react-redux';
 import {get as getProp} from 'lodash';
-import {Waypoint} from 'react-waypoint';
 import MUIDataTable from 'mui-datatables';
 import {capitalize, get} from 'lodash';
 import {createTheme, ThemeProvider, Theme} from '@mui/material/styles';
-import {BlockEventType, CategroryColor} from 'common/shared.definition';
-import EventBus from 'eventing-bus';
+import {CategroryColor} from 'common/shared.definition';
 import {listAllBookmarks} from 'api/user/bookmark';
-import {useNavigate, useLocation} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import './Bookmark.scss';
-import {Category, Tag} from 'pages/shared.definition';
 
-import {Chip, Stack, Avatar, ErrorIcon, Tooltip, PushPinIcon, FavoriteIcon, Done, Fab, AddIcon, KeyboardArrowUpIcon} from 'lib/mui-shared';
+import {Chip, Stack, PushPinIcon, Fab, KeyboardArrowUpIcon} from 'lib/mui-shared';
 import {TimeFormatter} from 'lib/formatter/time';
 import {CountFormatter} from 'lib/formatter/count';
-import {withStyles, Table, TableBody, TableCell, TableHead, TableRow, Paper, CircularProgress} from '@material-ui/core';
-import {Role} from 'App';
+import {withStyles, CircularProgress} from '@material-ui/core';
 import WithDialog from 'common/Dialog/WithDialog';
 
 declare module '@mui/material/styles' {
@@ -47,8 +43,8 @@ export const paramDict = {
     fitlerList: ''
   },
   [TableAction.sort]: {
-    ['sortOrder.name']: 'sort',
-    ['sortOrder.direction']: 'sort_type'
+    'sortOrder.name': 'sort',
+    'sortOrder.direction': 'sort_type'
   },
   [TableAction.search]: {
     searchText: 'search'
@@ -99,23 +95,20 @@ const convertToTable = (responseBody): Post[] => {
     };
   });
 };
-const getQueryFromUrl = (queryParams) => {
-  const result = {};
-  for (const [key, value] of queryParams.entries()) {
-    if (!ALLOWED_FILTER_FIELD.includes(key)) {
-      continue;
-    }
+// const getQueryFromUrl = (queryParams) => {
+//   const result = {};
+//   for (const [key, value] of queryParams.entries()) {
+//     if (!ALLOWED_FILTER_FIELD.includes(key)) {
+//       continue;
+//     }
 
-    result[key] = value.split(',');
-  }
+//     result[key] = value.split(',');
+//   }
 
-  return result;
-};
+//   return result;
+// };
 
 const Bookmark = (prop) => {
-  const {classes} = prop;
-  const {search} = useLocation();
-  const urlSearchParams = useMemo(() => new URLSearchParams(search), [search]);
   const [page, setPage] = useState<number>(0)
   const [posts, setPosts] = useState<Post[]>([]);
   const [total, setTotal] = useState<number>(0);
@@ -136,12 +129,7 @@ const Bookmark = (prop) => {
   }
 
   const history = useNavigate();
-  const directToCreatePost = () => history(`/post/create`);
-  const deletePosts = async () => {
-    prop.closeDialog()
-    // await deleteManyPosts(selectIds);
-    await getPosts();
-  };
+ 
   const onSelectRows = (currentRowsSelected, allRowsSelected, rowsSelected: number[]) => {
     const postIds = rowsSelected.map((index: number) => posts[index].id);
     setSelectIds(postIds);
@@ -237,10 +225,6 @@ const Bookmark = (prop) => {
     window.scrollTo(0, 0)
   }
 
-  const handleDialogCancellClick = () => {
-    prop.closeDialog();
-  };
-
   const onClickReadMore = async () => {
     const newPage = page + 1
     queryParams.current['skip'] = newPage;
@@ -249,18 +233,18 @@ const Bookmark = (prop) => {
   }
 
 
-  const openRemoveConfirmDialog = ()=>{
-    const component = "Are you sure to delete these articles?";
-    prop.openDialog({
-      component,
-      title: 'Confirm',
-      okCallback: deletePosts,
-      cancelCallback: handleDialogCancellClick,
-      width: 'md',
-      okText: 'OK',
-      cancelText: 'Cancel'
-    });
-  }
+  // const openRemoveConfirmDialog = ()=>{
+  //   const component = "Are you sure to delete these articles?";
+  //   prop.openDialog({
+  //     component,
+  //     title: 'Confirm',
+  //     okCallback: deletePosts,
+  //     cancelCallback: handleDialogCancellClick,
+  //     width: 'md',
+  //     okText: 'OK',
+  //     cancelText: 'Cancel'
+  //   });
+  // }
 
   const getMuiTheme = () =>
     createTheme({

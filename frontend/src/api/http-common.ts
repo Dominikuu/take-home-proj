@@ -1,8 +1,8 @@
 import axios from 'axios';
 import {stringify} from 'qs'
 import authHeader from './auth-header'
-import {HttpMethods, ApiResponse} from './struct';
-import {logout, checkAuth} from 'lib/auth/auth.action';
+import {HttpMethods} from './struct';
+import {logout} from 'lib/auth/auth.action';
 import store from 'lib/store';
 
 const BASE_URL = process.env.REACT_APP_API_ENDPOINT;
@@ -62,7 +62,7 @@ instance.interceptors.response.use(
   );
 
 
-export default function(method:HttpMethods, url: string, data?:any, config?: any): any {
+export default function httpCommon(method:HttpMethods, url: string, data?:any, config?: any): any {
     let responeBody = null;
     switch (method) {
         case HttpMethods.POST:

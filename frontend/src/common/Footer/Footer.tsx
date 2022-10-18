@@ -3,9 +3,6 @@ import fb from 'assets/img/fb_icon.svg';
 import ig from 'assets/img/IG_icon.svg';
 import twitter from 'assets/img/Twitter_icon.svg';
 import linkedin from 'assets/img/in_icon.svg';
-import mail from 'assets/img/mail_icon.svg';
-import web from 'assets/img/web_icon.svg';
-import logo from 'assets/img/UniTik_LOGO2.svg';
 import {MENU_CONFIG} from 'router/Router';
 import './Footer.scss';
 

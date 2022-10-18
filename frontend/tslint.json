@@ -82,6 +82,6 @@
         "no-duplicate-variable": true,
         "no-implicit-dependencies": true,
         "no-const-enum": true,
-        "no-unused-declaration": true
+        "no-unused-declaration": false
     }
 }

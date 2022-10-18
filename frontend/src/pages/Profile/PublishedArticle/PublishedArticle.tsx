@@ -1,22 +1,18 @@
-import React, {Fragment, useMemo, useEffect, useState, useRef, CSSProperties} from 'react';
-import {Container, Row, Col, Button} from 'react-bootstrap';
-import {useDispatch, useSelector} from 'react-redux';
+import { useEffect, useState, useRef, CSSProperties} from 'react';
+import {Container, Row, Button} from 'react-bootstrap';
+import {useSelector} from 'react-redux';
 import {get as getProp} from 'lodash';
-import {Waypoint} from 'react-waypoint';
 import MUIDataTable from 'mui-datatables';
 import {get} from 'lodash';
 import {createTheme, ThemeProvider, Theme} from '@mui/material/styles';
-import {BlockEventType} from 'common/shared.definition';
-import EventBus from 'eventing-bus';
 import {listAllPosts, deleteManyPosts} from 'api/post';
-import {useNavigate, useLocation} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import './PublishedArticle.scss';
-import {Category, Tag} from 'pages/shared.definition';
 
-import {Chip, Stack, Avatar, ErrorIcon, Tooltip, PushPinIcon, FavoriteIcon, Done} from 'lib/mui-shared';
+import {Chip, Stack, PushPinIcon} from 'lib/mui-shared';
 import {TimeFormatter} from 'lib/formatter/time';
 import {CountFormatter} from 'lib/formatter/count';
-import {withStyles, Table, TableBody, TableCell, TableHead, TableRow, Paper, CircularProgress} from '@material-ui/core';
+import {withStyles, CircularProgress} from '@material-ui/core';
 import {Role} from 'App';
 import WithDialog from 'common/Dialog/WithDialog';
 
@@ -49,8 +45,8 @@ export const paramDict = {
     fitlerList: ''
   },
   [TableAction.sort]: {
-    ['sortOrder.name']: 'sort',
-    ['sortOrder.direction']: 'sort_type'
+    'sortOrder.name': 'sort',
+    'sortOrder.direction': 'sort_type'
   },
   [TableAction.search]: {
     searchText: 'search'
@@ -100,23 +96,20 @@ const convertToTable = (responseBody): Post[] => {
     };
   });
 };
-const getQueryFromUrl = (queryParams) => {
-  const result = {};
-  for (const [key, value] of queryParams.entries()) {
-    if (!ALLOWED_FILTER_FIELD.includes(key)) {
-      continue;
-    }
+// const getQueryFromUrl = (queryParams) => {
+//   const result = {};
+//   for (const [key, value] of queryParams.entries()) {
+//     if (!ALLOWED_FILTER_FIELD.includes(key)) {
+//       continue;
+//     }
 
-    result[key] = value.split(',');
-  }
+//     result[key] = value.split(',');
+//   }
 
-  return result;
-};
+//   return result;
+// };
 
 const PublishedArticle = (prop) => {
-  const {classes} = prop;
-  const {search} = useLocation();
-  const urlSearchParams = useMemo(() => new URLSearchParams(search), [search]);
   const [page, setPage] = useState<number>(0)
   const [posts, setPosts] = useState<Post[]>([]);
   const [total, setTotal] = useState<number>(0);

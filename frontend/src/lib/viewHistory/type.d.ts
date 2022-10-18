@@ -15,5 +15,3 @@ type ViewHistoryAction  = {
 }
 
 type ViewHistoryDispatchType = (args: ViewHistoryAction) => ViewHistoryAction
-
-

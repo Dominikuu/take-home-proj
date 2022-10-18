@@ -1,6 +1,4 @@
-import React from 'react';
-import {Col, Row, Button} from 'react-bootstrap';
-import {renderRoutes, matchRoutes} from 'react-router-config';
+import {Col, Row} from 'react-bootstrap';
 import Product1 from 'assets/img/TopPage_1_Product.svg';
 import Product2 from 'assets/img/TopPage_2_Product.png';
 import Product3 from 'assets/img/TopPage_3_Product.svg';
@@ -14,7 +12,7 @@ const Home = () => (
     <section className="section1">
       <Row>
         <Col xs={12} md={6} className="photo-panel">
-          <img src={Product1} />
+          <img src={Product1} alt="product1"/>
         </Col>
         <Col xs={12} md={6}>
           <h1 className="title">High-Performance</h1>
@@ -31,7 +29,7 @@ const Home = () => (
           <p className="ft-16 grey">A true multi-application network operating system</p>
         </Col>
         <Col xs={12} md={12} className="photo-panel">
-          <img src={Product2} />
+          <img alt="product5" src={Product2} />
         </Col>
         <Col xs={12} md={12}>
           <p className="ft-16 grey">
@@ -58,7 +56,7 @@ const Home = () => (
           </div>
         </Col>
         <Col xs={12} md={6} className="photo-panel">
-          <img src={Product3} />
+          <img alt="product5" src={Product3} />
         </Col>
       </Row>
     </section>
@@ -67,7 +65,7 @@ const Home = () => (
         <Col xs={12} md={6} className="left-panel">
           <Row>
             <Col xs={12} md={6} className="photo-panel">
-              <img src={Product41} />
+              <img alt="product5" src={Product41} />
             </Col>
             <Col xs={12} md={6} className="photo-panel">
               <h1 className="title">ISP and WISP Solutions</h1>
@@ -82,7 +80,7 @@ const Home = () => (
         <Col xs={12} md={6} className="right-panel">
           <Row>
             <Col xs={12} md={6} className="photo-panel">
-              <img src={Product42} />
+              <img alt="product5" src={Product42} />
             </Col>
             <Col xs={12} md={6} className="photo-panel">
               <h1 className="title">Point-to-Multipoint Access Solutions</h1>
@@ -99,13 +97,13 @@ const Home = () => (
     <section className="section5">
       <Row>
         <Col xs={12} md={6} className="photo-panel">
-          <img src={Product5} />
+          <img alt="product5" src={Product5} />
         </Col>
         <Col xs={12} md={6}>
           <h1 className="title">Business Solutions</h1>
           <p className="ft-16 grey">Increase productivity with products built for your business or home office</p>
           <div style={{textAlign: 'right'}}>
-            <a href="#" className="learn-more">
+            <a href="/" className="learn-more">
               {'Learn more >>'}
             </a>
           </div>

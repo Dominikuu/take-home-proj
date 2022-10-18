@@ -1,7 +1,6 @@
 import React, {useState, useEffect, ChangeEvent} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {MenuItem, Select, TextField} from 'lib/mui-shared'
-import { SelectChangeEvent } from '@mui/material/Select';
+import {MenuItem, TextField} from 'lib/mui-shared'
 
 import {Error, FormCtrlProps} from 'common/shared.definition';
 import './Select.scss';

@@ -1,12 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {cloneDeep, isString, isEqual } from 'lodash';
-import {Col, Row, Container, Button} from 'react-bootstrap';
+import { Row, Container, Button} from 'react-bootstrap';
 import {useDispatch, useSelector} from 'react-redux';
 import {Dispatch} from 'redux';
 import InputField from 'common/InputField/InputField'
 import UtSelect from 'common/Select/Select'
 import withSnackbar from 'common/Snackbar/Snackbar';
-import {styled} from '@mui/material/styles';
 import {Paper, Avatar, IconButton, EditIcon, Backdrop,
   CircularProgress} from 'lib/mui-shared';
 import {updateProfile} from 'lib/auth/auth.action'
@@ -24,17 +23,6 @@ const INIT_STATE = {
   fieldErrors: {}
 };
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
-
-const ListItem = styled('li')(({theme}) => ({
-  margin: theme.spacing(0.5)
-}));
 const MyAccount = (prop) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form, setForm] = useState(cloneDeep(INIT_STATE));

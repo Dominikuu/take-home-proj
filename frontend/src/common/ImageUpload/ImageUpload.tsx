@@ -97,7 +97,7 @@ const ImageUpload: React.FC<ImageUploadProps<Blob| string>> = ({value, required,
         </div>:
         <div className="image-wrapper">
           <div className="preview">
-            <img className="uploaded-image" src={preview}/>
+            <img className="uploaded-image" src={preview} alt="upload"/>
             <IconButton color="primary" className="clear-button" aria-label="upload picture" component="label" onClick={clearImage}>
               <CancelIcon />
             </IconButton>

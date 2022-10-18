@@ -1,12 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {useSelector} from 'react-redux';
-import {cloneDeep, get, isEqual} from 'lodash';
-import {useParams, useNavigate, useLocation} from 'react-router-dom';
-import {Col, Row, Button} from 'react-bootstrap';
-import {convertFromHTML, ContentState, EditorState} from 'draft-js';
+import {cloneDeep, isEqual} from 'lodash';
+import {useParams, useNavigate, } from 'react-router-dom';
+import {Row, } from 'react-bootstrap';
 
 import draftToHtml from 'draftjs-to-html';
-import DOMPurify from 'dompurify';
 import {styled} from '@mui/material/styles';
 import ImageUpload from 'common/ImageUpload/ImageUpload'
 import {Link, LoadingButton} from 'lib/mui-shared';
@@ -16,7 +14,7 @@ import InputField from 'common/InputField/InputField';
 import UtfSwtich from 'common/Switch/Switch';
 import UtfToggleButtonGroup from 'common/ToggleButtonGroup/ToggleButtonGroup';
 import CustomToolbarEditor from 'common/CustomToolbarEditor/CustomToolbarEditor'
-import {Category, Tag} from 'common/shared.definition'
+import {Category} from 'common/shared.definition'
 import {updateOnePost, getOnePost} from 'api/post';
 import {createPostImage} from 'api/post/image/upload';
 import {Role} from 'App';
@@ -50,15 +48,10 @@ const EditPost = (prop) => {
   const [uploadedImages, setUploadedImages] = useState([])
   const [form, setForm] = useState(cloneDeep(INIT_STATE.fields));
   const [fieldErrors, setFieldErrors] = useState({})
-  const {title, category, tags, content, author, cover, hidden, closed, is_pinned} = form
+  const {content} = form
   const authState = useSelector((state: {auth: any}) => state.auth);
   const history = useNavigate();
 
-  const createMarkup = (html) => {
-    return {
-      __html: DOMPurify.sanitize(html)
-    };
-  };
 
   const onInputChange = ({formControlName, value, error}) => {
     const _fieldErrors = cloneDeep(fieldErrors);

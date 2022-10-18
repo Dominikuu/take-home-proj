@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Navbar from 'common/Navigation/Navbar';
 import Footer from 'common/Footer/Footer';
@@ -36,13 +36,13 @@ function App() {
     }, 1200);
     return () => clearTimeout(timer);
   }, []);
-  const isLocalhost = Boolean(
-    window.location.hostname === 'localhost' ||
-      // [::1] is the IPv6 localhost address.
-      window.location.hostname === '[::1]' ||
-      // 127.0.0.1/8 is considered localhost for IPv4.
-      window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
-  );
+  // const isLocalhost = Boolean(
+  //   window.location.hostname === 'localhost' ||
+  //     // [::1] is the IPv6 localhost address.
+  //     window.location.hostname === '[::1]' ||
+  //     // 127.0.0.1/8 is considered localhost for IPv4.
+  //     window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
+  // );
   return (
     <ThemeProvider theme={THEME}>
       <Router>
@@ -51,28 +51,11 @@ function App() {
           <Navbar />
           <DialogProvider>
             <Routes>
-              <Route path="/" element={<Page.Community />} />
-              <Route path="/posts" element={<Page.PostList />} />
-              <Route path="/post/:postId" element={<Page.Post />} />
-              {/* Private Route */}
-              <Route path="/" element={<PrivatedRoutes />}>
-                <Route path="profile" element={<Page.Profile />} />
-                <Route path="post/create" element={<Page.CreatePost />} />
-                <Route path="post/:postId/edit" element={<Page.EditPost />} />
-              </Route>
+              <Route path="/" element={<Page.PostList />} />
+              <Route path="/offers" element={<Page.PostList />} />
+              <Route path="/offer/:offerId" element={<Page.Post />} />
+              <Route path="/offer/:offerId" element={<Page.Post />} />
               <Route path="*" element={<Page.NotFound />} />
-
-              {/* {ROUTES.map((route, idx): JSX.Element => {
-              const {path, routes} = route;
-              console.log(routes);
-              return (
-                <Route
-                  key={idx}
-                  path={path}
-                  render={(routeProps) => <route.Component routes={routes} {...routeProps} />}
-                />
-              );
-            })} */}
             </Routes>
           </DialogProvider>
           <Footer />

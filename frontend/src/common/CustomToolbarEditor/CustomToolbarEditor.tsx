@@ -1,11 +1,11 @@
-import React, { Component, useEffect, useState, useRef } from 'react';
-import {cloneDeep, get} from 'lodash'
+import React, { useEffect, useState, useRef } from 'react';
+import {get} from 'lodash'
 import '@draft-js-plugins/static-toolbar/lib/plugin.css';
 import '@draft-js-plugins/alignment/lib/plugin.css'
 
 import Editor, { createEditorStateWithText, composeDecorators } from '@draft-js-plugins/editor';
 import { convertToRaw, CompositeDecorator, EditorState, convertFromHTML, AtomicBlockUtils, ContentState } from 'draft-js';
-import createToolbarPlugin, { Separator} from '@draft-js-plugins/static-toolbar';
+import createToolbarPlugin from '@draft-js-plugins/static-toolbar';
 import {
   ItalicButton,
   BoldButton,
@@ -203,22 +203,22 @@ const CustomToolbarEditor: React.FC<EditorProps<string>> = ({onChange, formContr
     );
   }
 
-  const Image = (props) => {
-    const {
-      height,
-      src,
-      width,
-    } = props.contentState.getEntity(props.entityKey).getData();
-    return (
-      <img src={src} height={height} width={width} />
-    );
-  };
-  const _decorator = new CompositeDecorator([
-    {
-      strategy: findImageEntities,
-      component: Image,
-    },
-  ])
+  // const Image = (props) => {
+  //   const {
+  //     height,
+  //     src,
+  //     width,
+  //   } = props.contentState.getEntity(props.entityKey).getData();
+  //   return (
+  //     <img src={src} height={height} width={width} />
+  //   );
+  // };
+  // const _decorator = new CompositeDecorator([
+  //   {
+  //     strategy: findImageEntities,
+  //     component: Image,
+  //   },
+  // ])
 
   const setInitEditorContent = ()=>{
     if (typeof value !== 'string'){

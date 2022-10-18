@@ -26,7 +26,7 @@ import {TimeFormatter} from 'lib/formatter/time';
 import {LogLevel, listAllNotifications} from 'api/user/notifications'
 import {updateAllRead} from 'api/user/notifications/mark-as-all-read'
 import {updateOneRead} from 'api/user/notification/read'
-import {NOTI_CONTEXT, SEARCH_DAY_BEFORE, NotiItem, NotiType, NotiAction} from './NotificationPanel.definition'
+import {NOTI_CONTEXT, SEARCH_DAY_BEFORE, NotiItem} from './NotificationPanel.definition'
 
 const LIST_ITEM_HEIGHT = 72.5
 const MIN_LIST_LENGTH = 5
@@ -75,7 +75,7 @@ const NotificationPanel = ({unread, onRefresh}: {unread: number; onRefresh:(refr
       (async()=>{
         await updateOneRead({notification_id: notificationId}).then(()=>{
           const oldNotiList = cloneDeep(notiList)
-          const targetNoti = oldNotiList.find(({notification_id})=> notification_id == notificationId)
+          const targetNoti = oldNotiList.find(({notification_id})=> notification_id === notificationId)
           targetNoti.is_read = true
           setNotiList(oldNotiList)
           onRefresh(true)
