@@ -1,3 +1,4 @@
+
 import {useState, useEffect} from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Navbar from 'common/Navigation/Navbar';
@@ -51,8 +52,8 @@ function App() {
           <Navbar />
           <DialogProvider>
             <Routes>
-              <Route path="/" element={<Page.PostList />} />
-              <Route path="/offers" element={<Page.PostList />} />
+              <Route path="/" element={<Page.OfferList />} />
+              <Route path="/offers" element={<Page.OfferList />} />
               <Route path="/offer/:offerId" element={<Page.Post />} />
               <Route path="/offer/:offerId" element={<Page.Post />} />
               <Route path="*" element={<Page.NotFound />} />

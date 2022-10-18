@@ -19,6 +19,7 @@ import {CountFormatter} from 'lib/formatter/count';
 import {withStyles, CircularProgress} from '@material-ui/core';
 import {Role} from 'App';
 import WithDialog from 'common/Dialog/WithDialog';
+import {clearVeiwHistory} from 'lib/offer/offer.action';
 import './Feature-topics.scss';
 
 declare module '@mui/material/styles' {
@@ -106,8 +107,8 @@ const ReadmoreButton = styled(LoadingButton)({
 
 });
 
-const convertToTable = (responseBody, authState): Post[] => {
-  const bookmarks = get(authState, 'user.bookmarks')
+const convertToTable = (responseBody): Post[] => {
+  const bookmarks = []
   return responseBody.map(({post_id, likes, hidden, title, category, tags, is_pinned, author, create_time, replies, views}) => {
     return {
       id: post_id,
@@ -141,20 +142,20 @@ const FeatureTopics = (prop) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [selectIds, setSelectIds] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const authState = useSelector((state: {auth: any}) => state.auth);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const offerState = useSelector((state: {offer: []}) => state.offer);
   const queryParams = useRef({skip: 0, limit: 10, ...getQueryFromUrl(urlSearchParams)});
   const getPosts = async () => {
     // setIsLoading(true)
     const resp = await listAllPosts(queryParams.current);
-    setPosts([...convertToTable(resp.data.data, authState)]);
+    setPosts([...convertToTable(resp.data.data)]);
     setTotal(resp.data.total);
     setIsLoading(false);
   };
 
   const getPartialPosts = async ()=>{
     const resp = await listAllPosts(queryParams.current);
-    setPosts([...posts, ...convertToTable(resp.data.data, authState)]);
+    setPosts([...posts, ...convertToTable(resp.data.data)]);
   }
 
   const history = useNavigate();
@@ -174,41 +175,6 @@ const FeatureTopics = (prop) => {
       event.stopPropagation();
     }
     history(`/posts?${query}=${value.toLowerCase()}`)
-  }
-
-  const onLike = async(event: MouseEvent,isLiked: boolean, postId:string) => {
-    if(event) {
-      event.preventDefault()
-      event.stopPropagation()
-    }
-    const user = get(authState, 'user._id')
-    const reqBody = {post_id: postId, user_id: user, comment_id: null};
-    const {data} = isLiked?  (await updateOneUnlike(reqBody)): (await updateOneLike(reqBody));
-    const newPosts = cloneDeep(posts)
-    const target = newPosts.find((post)=>post.id === postId)
-    if (isLiked) {
-      target.likes = target.likes.filter(({user_id})=>user_id!==user)
-    } else {
-      target.likes.push({user_id: user})
-    }
-    setPosts(newPosts)
-
-  }
-  const onBookmarkClicked = async(event: MouseEvent, isAdded: boolean, postId:string) => {
-    if(event) {
-      event.preventDefault()
-      event.stopPropagation()
-    }
-
-    const reqBody: UpdateBookmarkRequestBody = {
-      action: isAdded? BookmarkAction.Remove: BookmarkAction.Add,
-      post: postId
-    }
-    await updateOneBookmarks(reqBody)
-    const newPosts = cloneDeep(posts)
-    const target = newPosts.find(({id})=>id === postId)
-    target.bookmark = !isAdded
-    setPosts(newPosts)
   }
 
   const columns = [
@@ -282,23 +248,7 @@ const FeatureTopics = (prop) => {
     {label: 'Replies', name: 'replies'},
     {label: 'Views', name: 'views'},
     {label: 'Latest Post', name: 'create_time'},
-    {
-      label: 'Bookmark',
-      name: 'bookmark',
-      options: {
-        display: authState.isLoggedIn? true: false,
-        customBodyRender: (isAdded, tableMeta, updateValue) => {
-          const postId = posts[tableMeta.rowIndex].id
-          return (
-            <Tooltip title="Add to bookmark">
-              <IconButton component="span" size="small" onClick={(event: MouseEvent)=>onBookmarkClicked(event, isAdded, postId)}>
-                <BookmarksIcon color={isAdded? 'error': 'disabled'} />
-              </IconButton>
-            </Tooltip>
-          );
-        }
-      }
-    }
+    
   ];
   const onTableTakeAction = (action: TableAction, tableState) => {
     const tableKeyDict = paramDict[action];
@@ -313,8 +263,6 @@ const FeatureTopics = (prop) => {
   };
 
   const options = {
-    selectableRowsHeader: get(authState, 'user.role') === 'ADMIN',
-    selectableRowsHideCheckboxes: get(authState, 'user.role') !== 'ADMIN',
     print: false,
     pagination: false,
     download: false,
@@ -333,33 +281,33 @@ const FeatureTopics = (prop) => {
         }
       }
     ),
-    customToolbar: ()=>{
-      if (!authState.user) {
-        return
-      }
-      return (authState.user.role === Role.Member || authState.user.role === Role.Admin) &&  (
-        <div className="btn-container">
-          <Button className="btn btn-primary" onClick={directToCreatePost}>
-            Create New Topic
-          </Button>
-        </div>
-      )
-    },
-    customToolbarSelect: ()=>{
-      if (!authState.user) {
-        return
-      }
-      return (authState.user.role === Role.Member || authState.user.role === Role.Admin) &&  (
-        <div className="btn-container">
-          <Button className="btn btn-primary" onClick={directToCreatePost}>
-            Create New Topic
-          </Button>
-          {authState.user.role === Role.Admin && selectIds.length >0 && <Button className="btn btn-primary" onClick={openRemoveConfirmDialog}>
-            Remove
-          </Button>}
-        </div>
-      )
-    },
+    // customToolbar: ()=>{
+    //   if (!authState.user) {
+    //     return
+    //   }
+    //   return (authState.user.role === Role.Member || authState.user.role === Role.Admin) &&  (
+    //     <div className="btn-container">
+    //       <Button className="btn btn-primary" onClick={directToCreatePost}>
+    //         Create New Topic
+    //       </Button>
+    //     </div>
+    //   )
+    // },
+    // customToolbarSelect: ()=>{
+    //   if (!authState.user) {
+    //     return
+    //   }
+    //   return (authState.user.role === Role.Member || authState.user.role === Role.Admin) &&  (
+    //     <div className="btn-container">
+    //       <Button className="btn btn-primary" onClick={directToCreatePost}>
+    //         Create New Topic
+    //       </Button>
+    //       {authState.user.role === Role.Admin && selectIds.length >0 && <Button className="btn btn-primary" onClick={openRemoveConfirmDialog}>
+    //         Remove
+    //       </Button>}
+    //     </div>
+    //   )
+    // },
     viewColumns: false,
     onTableChange: onTableTakeAction.bind(this),
     onRowSelectionChange: onSelectRows.bind(this)
@@ -441,17 +389,17 @@ const FeatureTopics = (prop) => {
   useEffect(() => {
 
     (async () => {
-      await getPosts();
+      // await getPosts();
       EventBus.on(BlockEventType.ChangeFilter,(selection: {[group: string]: Set<string>})=>{
         const array_query = {}
         for (const group of Object.keys(selection)){
           array_query[group] = Array.from(selection[group])
         }
         queryParams.current = {skip: 0, limit: 10, ...array_query}
-        getPosts();
+        // getPosts();
       })
     })();
-  }, [authState]);
+  }, []);
 
   return (
     <Container className="FeatureTopics block">
@@ -467,11 +415,11 @@ const FeatureTopics = (prop) => {
           </div>: null}
       </Row>
       <Container className="fixed-btn">
-        {authState.user && (authState.user.role === Role.Admin || authState.user.role === Role.Member) ?
-          <Fab size="small" color="error" aria-label="add" onClick={directToCreatePost}>
-            <AddIcon />
-          </Fab>: null
-        }
+        
+        <Fab size="small" color="error" aria-label="add" onClick={directToCreatePost}>
+          <AddIcon />
+        </Fab>
+        
         <Fab size="small" color="error" aria-label="top" onClick={scrollToTop}>
           <KeyboardArrowUpIcon />
         </Fab>
