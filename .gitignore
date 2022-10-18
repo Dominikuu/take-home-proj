@@ -1,2 +1,3 @@
 ./backend/postgres-data/*
 ./backend/server/node_modules/*
+./frontend/server/node_modules/*
