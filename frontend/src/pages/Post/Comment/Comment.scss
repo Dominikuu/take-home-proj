@@ -1,0 +1,27 @@
+.Comment {
+  border-top: 2px solid #aaa;
+  border-bottom: 2px solid #aaa;
+
+  .heading {
+  }
+
+  .content {
+    .menu-area {
+      position: relative;
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+
+      .controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .actions {
+          display: inline-flex;
+          text-align: right;
+          margin-left: auto;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+@import "styles/variables";
+.ImageUpload {
+    overflow: auto;
+    padding: 1rem 1rem 0;
+    width: 100%;
+    max-width: 1360px;
+    .uploader-wrapper,
+    .image-wrapper {
+        border-radius: 10px;
+    }
+    .uploader-wrapper>input {
+        display: none;
+    }
+    .image-dropzone {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 240px;
+        margin: 0 auto;
+        background: #eee;
+        border-radius: 10px;
+        cursor: pointer;
+        span {
+            margin-right: 1rem;
+        }
+    }
+    .image-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1px solid #ccc;
+        .preview {
+            display: inline-block;
+            position: relative;
+            img {
+                height: 240px;
+            }
+            .clear-button {
+                position: absolute;
+                top: 0;
+            }
+        }
+    }
+}

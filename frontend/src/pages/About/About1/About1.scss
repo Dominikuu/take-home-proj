@@ -1,0 +1,19 @@
+.about1-section {
+  position: relative !important;
+  padding-top: 150px !important;
+  padding-bottom: 30px !important;
+  background-image: url(../../../assets/img/about1-background.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  color: white !important;
+
+  .about-card {
+    justify-content: center;
+    padding-top: 60px;
+    padding-bottom: 50px;
+    border-radius: 20px;
+    background-color: rgba(50, 50, 50, 0.25);
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+  }
+}

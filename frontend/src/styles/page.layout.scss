@@ -1,0 +1,47 @@
+@import "styles/variables";
+@import "styles/mixin.flex";
+.page {
+    background-color: #fff;
+    section {
+        padding: 1rem 1.5rem;
+        .row {
+            @include flexbox();
+            @include justify-content(center);
+            @include align-items(center);
+            margin-right: 0;
+            margin-left: 0;
+            padding-bottom: 1rem;
+            [class*="col-"] {
+                &.photo-panel {
+                    text-align: center;
+                }
+                .title {
+                    font-size: 28px;
+                    font-weight: bold;
+                    padding-bottom: 20px;
+                }
+            }
+        }
+        &:nth-of-type(1) {
+            padding-top: $headerHeight
+        }
+    }
+    .full-window {
+        text-align: center;
+    }
+    .fold {
+        padding: 0;
+        .row {
+            padding-bottom: 0;
+        }
+    }
+    .widgets {
+        .row {
+            text-align: center;
+            [class*="col-"] {
+                margin: 0.5rem 0;
+                padding: 0 2rem;
+            }
+        }
+    }
+}

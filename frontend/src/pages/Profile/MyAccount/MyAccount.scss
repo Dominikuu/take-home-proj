@@ -1,0 +1,63 @@
+@import "styles/page.layout";
+
+.MyAccount {
+  padding: 0rem;
+  padding-bottom: 1rem;
+  // max-width: 900px;
+  
+  .row {
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    .field {
+      width: auto;
+    }
+  }
+  .avatar-row {
+    margin-bottom: 0;
+    margin-top:0;
+    padding-top: 2rem;
+    padding-bottom: 0rem;
+    background: #005c5c;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    .avatar {
+      position: relative;
+      width: auto;
+  
+      .avatar-img {
+        width: 7rem;
+        height: 7rem;
+      }
+      
+      .upload-btn {
+        position: absolute;
+        background: #f2f2f2;
+        bottom: 0;
+        right: 0;
+      }
+    }
+  }
+
+  .btn-container {
+    padding: 0 1rem;
+    justify-content: flex-end;
+      Button {
+      display: inline-block;
+      width: 5rem;
+      margin-left: 2.5rem;
+    }
+  }
+  .row {
+    width: none;
+  }
+  .link {
+    color: #b81c25;
+  }
+  .input-field {
+    width: 100%;
+  }
+  #curveDownColor path{
+    fill: #005c5c;
+    stroke: #005c5c;
+  }
+}
