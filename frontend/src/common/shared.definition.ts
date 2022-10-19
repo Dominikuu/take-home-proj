@@ -2,14 +2,15 @@ export enum BlockEventType {
     /**
      * Display Topic title on Nav after scrolling
      */
-    ShowTitleOnNav =  'ShowTitleOnNav',
+    ShowTitleOnNav = 'ShowTitleOnNav',
     CreateNewComment = 'CreateNewComment',
     DeleteComment = 'DeleteComment',
     ChangeFilter = 'ChangeFilter',
-    ShowSnackbarMessage = 'ShowSnackbarMessage'
+    ShowSnackbarMessage = 'ShowSnackbarMessage',
+    ToggleDrawer = 'ToggleDrawer',
 }
 export interface Error {
-    [errKey: string]: string
+    [errKey: string]: string;
 }
 export type FormCtrlProps<T> = {
     value: T;
@@ -19,24 +20,19 @@ export type FormCtrlProps<T> = {
     placeholder?: string;
     required?: boolean;
     type?: string;
-    validate?: (val: T)=> boolean;
-    onChange?: (event: {
-        formControlName: string;
-        value: T;
-        error: boolean | Error;
-    }) => any;
+    validate?: (val: T) => boolean;
+    onChange?: (event: {formControlName: string; value: T; error: boolean | Error}) => any;
     // options?: {label: string; value: any; }[];
     // exclusive?: boolean;
-}
+};
 
-
-export enum Category{
+export enum Category {
     Product = 'PRODUCT',
     Idea = 'IDEA',
     Training = 'TRAINING',
     Blog = 'BLOG',
     Announcement = 'ANNOUNCEMENT',
-    Story = 'STORY'
+    Story = 'STORY',
 }
 
 export enum Tag {
@@ -48,11 +44,13 @@ export enum Tag {
     Software = 'SOFTWARE',
 }
 
-export const CategroryColor: {[key: string]: "primary" | "default" | "secondary" | "error" | "info" | "success" | "warning" | undefined} = {
+export const CategroryColor: {
+    [key: string]: 'primary' | 'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | undefined;
+} = {
     [Category.Product]: 'primary',
     [Category.Idea]: 'default',
     [Category.Training]: 'secondary',
     [Category.Blog]: 'error',
     [Category.Announcement]: 'info',
     [Category.Story]: 'success',
-}
+};

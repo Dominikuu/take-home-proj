@@ -10,10 +10,21 @@ import {createTheme, styled, ThemeProvider, Theme} from '@mui/material/styles';
 
 import {BlockEventType, CategroryColor} from 'common/shared.definition';
 import {listAllPosts, deleteManyPosts} from 'api/post';
-import {updateOneLike, updateOneUnlike} from 'api/post/like';
-import {updateOneBookmarks, RequestBody as UpdateBookmarkRequestBody, Action as BookmarkAction} from 'api/user/bookmark';
+
 import {useNavigate, useLocation} from 'react-router-dom';
-import {Chip, Stack, Avatar, LoadingButton,Tooltip,IconButton, PushPinIcon, Fab, KeyboardArrowUpIcon, BookmarksIcon, AddIcon} from 'lib/mui-shared';
+import {
+  Chip,
+  Stack,
+  Avatar,
+  LoadingButton,
+  Tooltip,
+  IconButton,
+  PushPinIcon,
+  Fab,
+  KeyboardArrowUpIcon,
+  BookmarksIcon,
+  AddIcon
+} from 'lib/mui-shared';
 import {TimeFormatter} from 'lib/formatter/time';
 import {CountFormatter} from 'lib/formatter/count';
 import {withStyles, CircularProgress} from '@material-ui/core';
@@ -70,8 +81,7 @@ const styles = (theme: Theme) =>
       width: '100%',
       overflowX: 'auto',
       height: 300,
-      flexGrow: 1,
-
+      flexGrow: 1
     },
     head: {
       backgroundColor: theme.palette.primary.main,
@@ -94,32 +104,33 @@ const styles = (theme: Theme) =>
 
 const ReadmoreButton = styled(LoadingButton)({
   background: '#fff',
-  border: "1px solid #ff0000",
+  border: '1px solid #ff0000',
   borderRadius: '2rem',
   color: '#ff0000',
   padding: '0.25rem 0.5rem',
-  "&:hover":{
-    backgroundColor: "#ff0000",
-    borderColor: "#ff0000",
-    color: '#fff',
-  },
-
+  '&:hover': {
+    backgroundColor: '#ff0000',
+    borderColor: '#ff0000',
+    color: '#fff'
+  }
 });
 
 const convertToTable = (responseBody, authState): Post[] => {
-  const bookmarks = get(authState, 'user.bookmarks')
-  return responseBody.map(({post_id, likes, hidden, title, category, tags, is_pinned, author, create_time, replies, views}) => {
-    return {
-      id: post_id,
-      title: {title, status: 'new', category, is_pinned, tags},
-      author,
-      views: CountFormatter.countAbbr(views),
-      create_time: TimeFormatter.timeSince(new Date(create_time)),
-      replies,
-      bookmark: bookmarks && bookmarks.some((_post)=>_post === post_id),
-      hidden
-    };
-  });
+  const bookmarks = get(authState, 'user.bookmarks');
+  return responseBody.map(
+    ({post_id, likes, hidden, title, category, tags, is_pinned, author, create_time, replies, views}) => {
+      return {
+        id: post_id,
+        title: {title, status: 'new', category, is_pinned, tags},
+        author,
+        views: CountFormatter.countAbbr(views),
+        create_time: TimeFormatter.timeSince(new Date(create_time)),
+        replies,
+        bookmark: bookmarks && bookmarks.some((_post) => _post === post_id),
+        hidden
+      };
+    }
+  );
 };
 const getQueryFromUrl = (queryParams) => {
   const result = {};
@@ -134,10 +145,9 @@ const getQueryFromUrl = (queryParams) => {
 };
 
 const FeatureTopics = (prop) => {
-  const {classes} = prop;
   const {search} = useLocation();
   const urlSearchParams = useMemo(() => new URLSearchParams(search), [search]);
-  const [page, setPage] = useState<number>(0)
+  const [page, setPage] = useState<number>(0);
   const [posts, setPosts] = useState<Post[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [selectIds, setSelectIds] = useState<string[]>([]);
@@ -152,15 +162,15 @@ const FeatureTopics = (prop) => {
     setIsLoading(false);
   };
 
-  const getPartialPosts = async ()=>{
+  const getPartialPosts = async () => {
     const resp = await listAllPosts(queryParams.current);
     setPosts([...posts, ...convertToTable(resp.data.data, authState)]);
-  }
+  };
 
   const history = useNavigate();
-  const directToCreatePost = () => history(`/post/create`);
+  const onAddClicked = () => EventBus.publish(BlockEventType.ToggleDrawer, {isOpen: true});
   const deletePosts = async () => {
-    prop.closeDialog()
+    prop.closeDialog();
     await deleteManyPosts(selectIds);
     await getPosts();
   };
@@ -168,48 +178,6 @@ const FeatureTopics = (prop) => {
     const postIds = rowsSelected.map((index: number) => posts[index].id);
     setSelectIds(postIds);
   };
-
-  const onChipClicked = (event, query:string, value:string)=>{
-    if (event) {
-      event.stopPropagation();
-    }
-    history(`/posts?${query}=${value.toLowerCase()}`)
-  }
-
-  const onLike = async(event: MouseEvent,isLiked: boolean, postId:string) => {
-    if(event) {
-      event.preventDefault()
-      event.stopPropagation()
-    }
-    const user = get(authState, 'user._id')
-    const reqBody = {post_id: postId, user_id: user, comment_id: null};
-    const {data} = isLiked?  (await updateOneUnlike(reqBody)): (await updateOneLike(reqBody));
-    const newPosts = cloneDeep(posts)
-    const target = newPosts.find((post)=>post.id === postId)
-    if (isLiked) {
-      target.likes = target.likes.filter(({user_id})=>user_id!==user)
-    } else {
-      target.likes.push({user_id: user})
-    }
-    setPosts(newPosts)
-
-  }
-  const onBookmarkClicked = async(event: MouseEvent, isAdded: boolean, postId:string) => {
-    if(event) {
-      event.preventDefault()
-      event.stopPropagation()
-    }
-
-    const reqBody: UpdateBookmarkRequestBody = {
-      action: isAdded? BookmarkAction.Remove: BookmarkAction.Add,
-      post: postId
-    }
-    await updateOneBookmarks(reqBody)
-    const newPosts = cloneDeep(posts)
-    const target = newPosts.find(({id})=>id === postId)
-    target.bookmark = !isAdded
-    setPosts(newPosts)
-  }
 
   const columns = [
     {
@@ -227,7 +195,6 @@ const FeatureTopics = (prop) => {
                   onEnter={buildTestData.bind(this)}
                   onLeave={()=>{console.log('onLeave')}}
                 /> */}
-                
                 {value}*{rowIndex}
               </Fragment>
             );
@@ -242,7 +209,7 @@ const FeatureTopics = (prop) => {
       name: 'title',
       selector: 'title',
       options: {
-        setCellProps: () => ({ style: { minWidth: "40rem"} }),
+        setCellProps: () => ({style: {minWidth: '40rem'}}),
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
             <div className="title-container">
@@ -253,11 +220,17 @@ const FeatureTopics = (prop) => {
               </div>
               <div className="sub-title">
                 <div className="category">
-                  <Chip size="small" label={capitalize(value.category)} color={CategroryColor[value.category]} variant="outlined" onClick={(evt)=>{onChipClicked(evt, 'category', value.category)}}/>
+                  <Chip
+                    size="small"
+                    label={capitalize(value.category)}
+                    color={CategroryColor[value.category]}
+                    variant="outlined"
+                    onClick={(evt) => {}}
+                  />
                 </div>
                 <Stack className="tags" direction="row" spacing={1}>
                   {value.tags.map((tag, idx) => (
-                    <Chip key={idx} label={capitalize(tag)} size="small" onClick={(evt)=>{onChipClicked(evt, 'tags', tag)}}/>
+                    <Chip key={idx} label={capitalize(tag)} size="small" onClick={(evt) => {}} />
                   ))}
                 </Stack>
               </div>
@@ -286,13 +259,13 @@ const FeatureTopics = (prop) => {
       label: 'Bookmark',
       name: 'bookmark',
       options: {
-        display: authState.isLoggedIn? true: false,
+        display: authState.isLoggedIn ? true : false,
         customBodyRender: (isAdded, tableMeta, updateValue) => {
-          const postId = posts[tableMeta.rowIndex].id
+          const postId = posts[tableMeta.rowIndex].id;
           return (
             <Tooltip title="Add to bookmark">
-              <IconButton component="span" size="small" onClick={(event: MouseEvent)=>onBookmarkClicked(event, isAdded, postId)}>
-                <BookmarksIcon color={isAdded? 'error': 'disabled'} />
+              <IconButton component="span" size="small" onClick={(event: MouseEvent) => console.log(event)}>
+                <BookmarksIcon color={isAdded ? 'error' : 'disabled'} />
               </IconButton>
             </Tooltip>
           );
@@ -328,61 +301,65 @@ const FeatureTopics = (prop) => {
     count: total,
     search: false,
     setRowProps: (row, dataIndex, rowIndex) => ({
-        style: {
-          backgroundColor: posts[rowIndex].hidden? '#efefef': 'inherit'
-        }
+      style: {
+        backgroundColor: posts[rowIndex].hidden ? '#efefef' : 'inherit'
       }
-    ),
-    customToolbar: ()=>{
+    }),
+    customToolbar: () => {
       if (!authState.user) {
-        return
+        return;
       }
-      return (authState.user.role === Role.Member || authState.user.role === Role.Admin) &&  (
-        <div className="btn-container">
-          <Button className="btn btn-primary" onClick={directToCreatePost}>
-            Create New Topic
-          </Button>
-        </div>
-      )
+      return (
+        (authState.user.role === Role.Member || authState.user.role === Role.Admin) && (
+          <div className="btn-container">
+            <Button className="btn btn-primary" onClick={onAddClicked}>
+              Create New Topic
+            </Button>
+          </div>
+        )
+      );
     },
-    customToolbarSelect: ()=>{
+    customToolbarSelect: () => {
       if (!authState.user) {
-        return
+        return;
       }
-      return (authState.user.role === Role.Member || authState.user.role === Role.Admin) &&  (
-        <div className="btn-container">
-          <Button className="btn btn-primary" onClick={directToCreatePost}>
-            Create New Topic
-          </Button>
-          {authState.user.role === Role.Admin && selectIds.length >0 && <Button className="btn btn-primary" onClick={openRemoveConfirmDialog}>
-            Remove
-          </Button>}
-        </div>
-      )
+      return (
+        (authState.user.role === Role.Member || authState.user.role === Role.Admin) && (
+          <div className="btn-container">
+            <Button className="btn btn-primary" onClick={onAddClicked}>
+              Create New Topic
+            </Button>
+            {authState.user.role === Role.Admin && selectIds.length > 0 && (
+              <Button className="btn btn-primary" onClick={openRemoveConfirmDialog}>
+                Remove
+              </Button>
+            )}
+          </div>
+        )
+      );
     },
     viewColumns: false,
     onTableChange: onTableTakeAction.bind(this),
     onRowSelectionChange: onSelectRows.bind(this)
   };
 
-  const scrollToTop = ()=>{
-    window.scrollTo(0, 0)
-  }
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+  };
 
   const handleDialogCancellClick = () => {
     prop.closeDialog();
   };
 
   const onClickReadMore = async () => {
-    const newPage = page + 1
+    const newPage = page + 1;
     queryParams.current['skip'] = newPage;
-    setPage(newPage)
-    getPartialPosts()
-  }
+    setPage(newPage);
+    getPartialPosts();
+  };
 
-
-  const openRemoveConfirmDialog = ()=>{
-    const component = "Are you sure to delete these articles?";
+  const openRemoveConfirmDialog = () => {
+    const component = 'Are you sure to delete these articles?';
     prop.openDialog({
       component,
       title: 'Confirm',
@@ -392,7 +369,7 @@ const FeatureTopics = (prop) => {
       okText: 'OK',
       cancelText: 'Cancel'
     });
-  }
+  };
 
   const getMuiTheme = () =>
     createTheme({
@@ -400,8 +377,8 @@ const FeatureTopics = (prop) => {
         MuiPaper: {
           styleOverrides: {
             root: {
-              boxShadow: 'none',
-            },
+              boxShadow: 'none'
+            }
           }
         },
         MuiTableRow: {
@@ -431,47 +408,44 @@ const FeatureTopics = (prop) => {
             root: {
               padding: '12px',
               fontFamily: 'Poppins'
-            },
-
+            }
           }
         }
       }
     });
 
   useEffect(() => {
-
     (async () => {
       await getPosts();
-      EventBus.on(BlockEventType.ChangeFilter,(selection: {[group: string]: Set<string>})=>{
-        const array_query = {}
-        for (const group of Object.keys(selection)){
-          array_query[group] = Array.from(selection[group])
+      EventBus.on(BlockEventType.ChangeFilter, (selection: {[group: string]: Set<string>}) => {
+        const array_query = {};
+        for (const group of Object.keys(selection)) {
+          array_query[group] = Array.from(selection[group]);
         }
-        queryParams.current = {skip: 0, limit: 10, ...array_query}
+        queryParams.current = {skip: 0, limit: 10, ...array_query};
         getPosts();
-      })
+      });
     })();
   }, [authState]);
 
   return (
     <Container className="FeatureTopics block">
       <ThemeProvider theme={getMuiTheme()}>
-        {isLoading && <CircularProgress size={24} style={{marginLeft: 15, position: 'relative', top: 4}} />}
         <MUIDataTable data={posts} columns={columns} options={options} />
       </ThemeProvider>
       <Row className="btn-container">
-        {posts.length < total?
-          <div className="read-more"><ReadmoreButton loading={isLoading} onClick={onClickReadMore}>
-          Read more
-          </ReadmoreButton>
-          </div>: null}
+        {posts.length < total ? (
+          <div className="read-more">
+            <ReadmoreButton loading={isLoading} onClick={onClickReadMore}>
+              Read more
+            </ReadmoreButton>
+          </div>
+        ) : null}
       </Row>
       <Container className="fixed-btn">
-        {authState.user && (authState.user.role === Role.Admin || authState.user.role === Role.Member) ?
-          <Fab size="small" color="error" aria-label="add" onClick={directToCreatePost}>
-            <AddIcon />
-          </Fab>: null
-        }
+        <Fab size="small" color="error" aria-label="add" onClick={onAddClicked}>
+          <AddIcon />
+        </Fab>
         <Fab size="small" color="error" aria-label="top" onClick={scrollToTop}>
           <KeyboardArrowUpIcon />
         </Fab>
