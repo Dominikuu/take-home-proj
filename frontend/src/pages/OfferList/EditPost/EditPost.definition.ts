@@ -41,7 +41,13 @@ export const INIT_STATE = {
       tags: [Tag.Wifi, Tag.Ptmp],
       content: '',
       author: 'asd111112312',
-      is_pinned: false
+      is_pinned: false,
+    //   ==================
+        jobTitle: 'we',
+        salary: 121312,
+        bonus: 100000,
+        culture: 'we',
+        learning: 'we'
     },
     fieldErrors: {}
 };

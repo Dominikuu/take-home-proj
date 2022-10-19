@@ -35,7 +35,7 @@ interface EditorProps<T> extends FormCtrlProps<T> {
   exclusive?: boolean;
   value: T;
   toolbar: {
-    image: {
+    image?: {
       urlEnabled: boolean;
       uploadEnabled: boolean;
       uploadCallback: (file: any) => Promise<{

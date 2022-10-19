@@ -54,8 +54,8 @@ function App() {
             <Routes>
               <Route path="/" element={<Page.OfferList />} />
               <Route path="/offers" element={<Page.OfferList />} />
-              <Route path="/offer/:offerId" element={<Page.Post />} />
-              <Route path="/offer/:offerId" element={<Page.Post />} />
+              <Route path="/offer/:offerId" element={<Page.Offer />} />
+              <Route path="/statistic" element={<Page.Statistic />} />
               <Route path="*" element={<Page.NotFound />} />
             </Routes>
           </DialogProvider>

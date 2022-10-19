@@ -7,19 +7,17 @@ import MUIDataTable from 'mui-datatables';
 import EventBus from 'eventing-bus';
 import {get} from 'lodash';
 import {createTheme, styled, ThemeProvider, Theme} from '@mui/material/styles';
-
+import {useDispatch} from 'react-redux';
+import {Dispatch} from 'redux';
 import {BlockEventType, CategroryColor} from 'common/shared.definition';
 import {listAllPosts, deleteManyPosts} from 'api/post';
-import {updateOneLike, updateOneUnlike} from 'api/post/like';
-import {updateOneBookmarks, RequestBody as UpdateBookmarkRequestBody, Action as BookmarkAction} from 'api/user/bookmark';
 import {useNavigate, useLocation} from 'react-router-dom';
 import {Chip, Stack, Avatar, LoadingButton,Tooltip,IconButton, PushPinIcon, Fab, KeyboardArrowUpIcon, BookmarksIcon, AddIcon} from 'lib/mui-shared';
 import {TimeFormatter} from 'lib/formatter/time';
 import {CountFormatter} from 'lib/formatter/count';
 import {withStyles, CircularProgress} from '@material-ui/core';
-import {Role} from 'App';
 import WithDialog from 'common/Dialog/WithDialog';
-import {clearVeiwHistory} from 'lib/offer/offer.action';
+
 import './Feature-topics.scss';
 
 declare module '@mui/material/styles' {
@@ -145,6 +143,7 @@ const FeatureTopics = (prop) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const offerState = useSelector((state: {offer: []}) => state.offer);
   const queryParams = useRef({skip: 0, limit: 10, ...getQueryFromUrl(urlSearchParams)});
+  const dispatch: Dispatch<any> = useDispatch();
   const getPosts = async () => {
     // setIsLoading(true)
     const resp = await listAllPosts(queryParams.current);
@@ -385,7 +384,9 @@ const FeatureTopics = (prop) => {
         }
       }
     });
-
+  useEffect(()=>{
+    console.log(offerState)
+  },[offerState])
   useEffect(() => {
 
     (async () => {

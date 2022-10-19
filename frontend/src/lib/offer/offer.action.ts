@@ -6,67 +6,65 @@ export enum ActionType {
     DELETE = 'DELETE',
     UPDATE = 'UPDATE',
     CREATE = 'CREATE',
-    LIST = 'List'
+    LIST = 'LIST',
+    FIND = 'FIND'
 }
 
-export const STORAGE_KEY = 'view_history'
 
-export function loadViewHistory() {
+export function loadOffer() {
   const action: OfferAction = {
     type: ActionType.UPDATE,
     offer: [],
   };
-  return  (dispatch: ViewHistoryDispatchType) => {
-    const offer = localStorage.getItem(STORAGE_KEY) || []
+  return  (dispatch: OfferDispatchType) => {
     action.offer = []
     dispatch(action);
 
   };
 }
 
-export function listViewHistory() {
+export function listOffer() {
   const {offer: offerList} = store.getState();
   const action: OfferAction = {
     type: ActionType.LIST,
     offer: offerList.offer,
   };
-  return  (dispatch: ViewHistoryDispatchType) => {
+  return  (dispatch: OfferDispatchType) => {
     dispatch(action);
 
   };
 }
 
-export function saveViewHistory(post_id: string) {
+export function getOffer(offerId: string) {
+  const {offer: offerList} = store.getState();
+  const action: OfferAction = {
+    type: ActionType.FIND,
+    offer: offerList.offer,
+  };
+  return  (dispatch: OfferDispatchType) => {
+    dispatch(action);
+
+  };
+}
+
+export function createOffer(newOffer: any) {
   const {offer: offerList} = store.getState();
   const action: OfferAction = {
     type: ActionType.CREATE,
     offer: offerList.offer,
   };
+  
   return  (dispatch: OfferDispatchType) => {
-    const offer = offerList.offer
-    // Record post
-    // if(offer.includes()){
-    //   offer.delete(post_id)
-    // }
-    // offer.add(post_id)
-    // // Limit amount of record in localstorage
-    // if (offer.size > MAX_VIEW_AMOUNT) {
-    //   const first = Array.from(offer)[0]
-    //   offer.delete(first)
-    // }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(offer).reverse()))
-    action.offer = offer;
+    action.offer = newOffer;
     dispatch(action);
-
   };
 }
 
-export  function clearVeiwHistory() {
+export  function clearOffer() {
   const action: OfferAction = {
     type: ActionType.DELETE,
   };
-  return  (dispatch: ViewHistoryDispatchType) => {
-    localStorage.removeItem(STORAGE_KEY)
+  return  (dispatch: OfferDispatchType) => {
     dispatch(action);
   };
 }

@@ -7,7 +7,15 @@ import OfferTable from './Feature-topics/Feature-topics';
 import './OfferList.scss';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 
+const styles = {
+  BackdropProps: {
+    background: 'transparent'
+  }
+};
+
 const OfferList = () => {
+  
+
   const [open, setOpen] = useState<boolean>(false);
   const toggleDrawer = (isOpen: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
     if (
@@ -23,7 +31,8 @@ const OfferList = () => {
   useEffect(() => {
     EventBus.on(BlockEventType.ToggleDrawer, ({isOpen}) => {
       console.log(isOpen);
-      toggleDrawer(isOpen);
+      setOpen(isOpen);
+      // toggleDrawer(isOpen);
     });
   }, []);
   return (
@@ -32,7 +41,13 @@ const OfferList = () => {
         <Sidebar />
         <OfferTable onCreate={toggleDrawer} />
       </section>
-      <SwipeableDrawer anchor="bottom" open={open} onClose={toggleDrawer(false)} onOpen={toggleDrawer(true)}>
+      <SwipeableDrawer  
+        sx={{
+          drawer: {
+            background: 'red'
+          }}
+        } 
+        anchor="bottom" open={open} onClose={toggleDrawer(false)} onOpen={toggleDrawer(true)}>
         <EditPost />
       </SwipeableDrawer>
     </>

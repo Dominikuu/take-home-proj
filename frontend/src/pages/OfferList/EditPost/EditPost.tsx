@@ -1,25 +1,26 @@
 import {useState, useEffect} from 'react';
-import {useSelector} from 'react-redux';
 import {cloneDeep, isEqual} from 'lodash';
-import {useParams, useNavigate} from 'react-router-dom';
-import {Row} from 'react-bootstrap';
+import {useParams} from 'react-router-dom';
+import {Row, Col} from 'react-bootstrap';
 
 import draftToHtml from 'draftjs-to-html';
 import {styled} from '@mui/material/styles';
 import ImageUpload from 'common/ImageUpload/ImageUpload';
+import withSnackbar from 'common/Snackbar/Snackbar';
 import {Link, LoadingButton} from 'lib/mui-shared';
+import {createOffer} from 'lib/offer/offer.action'
 import {BlockEventType} from 'common/shared.definition';
 import EventBus from 'eventing-bus';
+import {useDispatch} from 'react-redux';
+import {Dispatch} from 'redux';
 import InputField from 'common/InputField/InputField';
 import UtfSwtich from 'common/Switch/Switch';
 import UtfToggleButtonGroup from 'common/ToggleButtonGroup/ToggleButtonGroup';
 import CustomToolbarEditor from 'common/CustomToolbarEditor/CustomToolbarEditor';
-import {Category} from 'common/shared.definition';
-import {updateOnePost, getOnePost} from 'api/post';
-import {createPostImage} from 'api/post/image/upload';
 import {Role} from 'App';
 import './EditPost.scss';
 import {CATEGORY_OPTIONS, TAG_OPTIONS, INIT_STATE} from './EditPost.definition';
+
 
 const ActionButton = styled(LoadingButton)({
   background: '#fff',
@@ -45,11 +46,11 @@ const EditPost = (prop) => {
   const [originForm, setOriginForm] = useState(cloneDeep(INIT_STATE.fields));
   const [loading, setLoading] = useState<boolean>(false);
   const [uploadedImages, setUploadedImages] = useState([]);
+  const dispatch: Dispatch<any> = useDispatch();
+
   const [form, setForm] = useState(cloneDeep(INIT_STATE.fields));
   const [fieldErrors, setFieldErrors] = useState({});
   const {content} = form;
-  const authState = useSelector((state: {auth: any}) => state.auth);
-  const history = useNavigate();
 
   const onInputChange = ({formControlName, value, error}) => {
     const _fieldErrors = cloneDeep(fieldErrors);
@@ -95,56 +96,45 @@ const EditPost = (prop) => {
 
   const onFormSubmit = async (evt) => {
     setLoading(true);
-    const post = cloneDeep(form);
+    const offer = cloneDeep(form);
     evt.preventDefault(); // prevents page from reloading on submit
+    dispatch(createOffer(offer))
     // if (this.validate()) return;
-    const formData = new FormData();
-    for (let [formctrl, value] of Object.entries(post)) {
-      if (formctrl === 'content' && typeof value !== 'string') {
-        value = draftToHtml(value, {}, false, customEntityTransform);
-      }
-      formData.append(formctrl, value as string);
-    }
-    try {
-      const {data} = await updateOnePost(postId, formData);
-      prop.snackbarShowMessage('Saved successfully').then((onClosed) => {
-        if (data) {
-          history(`/post/${postId}`);
-        }
-      });
-    } catch (err) {
-      prop.snackbarShowMessage('Error:' + err, 'alert');
-      setLoading(false);
-    }
+    
+    prop.snackbarShowMessage('Saved successfully').then((onClosed) => {
+      
+      EventBus.publish(BlockEventType.ToggleDrawer, {isOpen: false})
+      
+    });
+  
+    setLoading(false);
+    
   };
   const onResetClick = () => {
     setForm(cloneDeep(originForm));
     setIsFormChanged(false);
   };
 
-  const uploadImageCallBack = async (file) => {
-    const existedImages = cloneDeep(uploadedImages);
-    const formData = new FormData();
-    formData.append('files', file);
-    const imgUrl = await createPostImage(formData);
-    const imageObject = {
-      file: file,
-      localSrc: URL.createObjectURL(file)
-    };
+  // const uploadImageCallBack = async (file) => {
+  //   const existedImages = cloneDeep(uploadedImages);
+  //   const formData = new FormData();
+  //   formData.append('files', file);
+  //   const imgUrl = await createPostImage(formData);
+  //   const imageObject = {
+  //     file: file,
+  //     localSrc: URL.createObjectURL(file)
+  //   };
 
-    existedImages.push(imageObject);
-    setUploadedImages(existedImages);
-    return Promise.resolve({data: {link: imgUrl.data}});
-  };
+  //   existedImages.push(imageObject);
+  //   setUploadedImages(existedImages);
+  //   return Promise.resolve({data: {link: imgUrl.data}});
+  // };
 
   useEffect(() => {
     (async () => {
-      const {
-        data: {category, content, tags, title, is_pinned, cover}
-      } = await getOnePost(postId);
-      const originForm = {title, content, tags, category, is_pinned, cover};
-      setForm(cloneDeep(originForm));
-      setOriginForm(cloneDeep(originForm));
+      
+      setForm(cloneDeep(INIT_STATE.fields));
+      setOriginForm(cloneDeep(INIT_STATE.fields));
       setLoading(false);
     })();
     EventBus.on(BlockEventType.ToggleDrawer, ({payload}) => {
@@ -155,84 +145,76 @@ const EditPost = (prop) => {
   return (
     <section className="EditPost">
       <Row>
-        <Link className="link" href="#" underline="none">
+        <Link className="link" underline="none" onClick={()=>EventBus.publish(BlockEventType.ToggleDrawer, {isOpen: false})}>
           {'<< Back'}
         </Link>
       </Row>
-      <h4>Edit Topic</h4>
+      <h4>Create/Edit Topic</h4>
       <form>
+        <h2>Monetary compensation</h2>
         <Row>
-          <InputField
-            value={cloneDeep(form.title)}
-            name="Title"
-            formControlName="title"
-            placeholder=""
-            type="text"
-            required={true}
-            onChange={onInputChange}
-          ></InputField>
-        </Row>
-        <Row>
-          <UtfSwtich
-            value={cloneDeep(form.is_pinned)}
-            name="Pinned"
-            formControlName="is_pinned"
-            onChange={onInputChange}
-          ></UtfSwtich>
-        </Row>
-        {authState.user && authState.user.role === Role.Admin ? (
-          <>
-            <Row>
-              <UtfSwtich
-                value={cloneDeep(form.closed)}
-                name="Stop comment"
-                formControlName="closed"
-                onChange={onInputChange}
-              ></UtfSwtich>
-            </Row>
-            <Row>
-              <UtfSwtich
-                value={cloneDeep(form.hidden)}
-                name="Hide"
-                formControlName="hidden"
-                onChange={onInputChange}
-              ></UtfSwtich>
-            </Row>
-          </>
-        ) : null}
-        <Row>
-          <UtfToggleButtonGroup
-            value={cloneDeep(form.category)}
-            name="Category"
-            placeholder=""
-            formControlName="category"
-            type="text"
-            exclusive={true}
-            options={CATEGORY_OPTIONS}
-            onChange={onInputChange}
-          ></UtfToggleButtonGroup>
-        </Row>
-        <Row>
-          <UtfToggleButtonGroup
-            value={cloneDeep(form.tags)}
-            name="Tag"
-            formControlName="tags"
-            placeholder=""
-            type="text"
-            options={TAG_OPTIONS}
-            onChange={onInputChange}
-          ></UtfToggleButtonGroup>
-        </Row>
-        {form.category === Category.Announcement ? (
-          <Row>
-            <ImageUpload
-              value={cloneDeep(form.cover)}
-              name="Cover"
-              formControlName="cover"
+          <Col>
+            <InputField
+              value={cloneDeep(form.jobTitle)}
+              name="Job title"
+              formControlName="jobTitle"
+              placeholder=""
+              type="text"
+              required={true}
               onChange={onInputChange}
-            ></ImageUpload>
-          </Row>
-        ) : null}
+            ></InputField>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <InputField
+              value={cloneDeep(form.salary)}
+              name="Salary"
+              formControlName="salary"
+              placeholder=""
+              type="number"
+              required={true}
+              onChange={onInputChange}
+            ></InputField>
+          </Col>
+          <Col>
+            <InputField
+              value={cloneDeep(form.bonus)}
+              name="Bonus"
+              formControlName="bonus"
+              placeholder=""
+              type="number"
+              required={true}
+              onChange={onInputChange}
+            ></InputField>
+          </Col>
+        </Row>
+        <h2>non-monetary compensation</h2>
+        <Row>
+          <Col>
+            <InputField
+              value={cloneDeep(form.culture)}
+              name="Culture"
+              formControlName="culture"
+              placeholder=""
+              type="text"
+              required={true}
+              onChange={onInputChange}
+            ></InputField>
+          </Col>
+          <Col>
+            <InputField
+              value={cloneDeep(form.learning)}
+              name="learning"
+              formControlName="learning"
+              placeholder=""
+              type="text"
+              required={true}
+              onChange={onInputChange}
+            ></InputField>
+          </Col>
+        </Row>
+        
         <Row>
           <CustomToolbarEditor
             formControlName="content"
@@ -240,12 +222,7 @@ const EditPost = (prop) => {
             name="Description"
             onChange={onInputChange}
             toolbar={{
-              image: {
-                urlEnabled: true,
-                uploadEnabled: true,
-                uploadCallback: uploadImageCallBack,
-                inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg'
-              }
+            
             }}
           ></CustomToolbarEditor>
         </Row>
@@ -275,4 +252,4 @@ const EditPost = (prop) => {
   );
 };
 
-export default EditPost;
+export default withSnackbar(EditPost);
