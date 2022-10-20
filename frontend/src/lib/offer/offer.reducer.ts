@@ -1,6 +1,6 @@
 import { AnyAction } from 'redux';
 import {ActionType} from "./offer.action"
-import {v4 as uuidv4} from "uuid"
+
 const initialState: OfferState = {offer: []};
 
 export default function offerReducer(state: OfferState = initialState, action: AnyAction): OfferState {
@@ -10,7 +10,7 @@ export default function offerReducer(state: OfferState = initialState, action: A
       console.log(type)
       return {
         ...state,
-        offer: [...state.offer,Object.assign(payload.offer, {id: uuidv4()})],
+        offer: payload.offer,
     };
     case ActionType.LIST:
       return {
@@ -18,6 +18,11 @@ export default function offerReducer(state: OfferState = initialState, action: A
         offer: [],
     };
     case ActionType.DELETE:
+      return {
+        ...state,
+        offer: payload.offer,
+    };
+    case ActionType.LOAD:
       return {
         ...state,
         offer: payload.offer,

@@ -1,5 +1,5 @@
 import store from 'lib/store';
-
+import {v4 as uuidv4} from "uuid"
 export const MAX_VIEW_AMOUNT = 5
 
 export enum ActionType {
@@ -7,17 +7,21 @@ export enum ActionType {
     UPDATE = 'UPDATE',
     CREATE = 'CREATE',
     LIST = 'LIST',
-    FIND = 'FIND'
+    FIND = 'FIND',
+    LOAD = 'LOAD'
 }
 
 
-export function loadOffer() {
+export function loadOffers() {
   const action: OfferAction = {
-    type: ActionType.UPDATE,
+    type: ActionType.LOAD,
     offer: [],
   };
   return  (dispatch: OfferDispatchType) => {
-    action.offer = []
+    const data = JSON.parse(localStorage.getItem('OFFERS') as string)
+    console.log(JSON.parse(localStorage.getItem('OFFERS') as string))
+    const offers: Offer[] = []
+    action.offer = JSON.parse(localStorage.getItem('OFFERS') as string)
     dispatch(action);
 
   };
@@ -53,9 +57,13 @@ export function createOffer(newOffer: any) {
     type: ActionType.CREATE,
     offer: offerList.offer,
   };
+
+  
   
   return  (dispatch: OfferDispatchType) => {
-    action.offer = newOffer;
+    const {offer: offerList} = store.getState();  
+    action.offer = [...offerList.offer, {...newOffer, id: uuidv4(), comments: []}];
+    localStorage.setItem('OFFERS', JSON.stringify(action.offer))
     dispatch(action);
   };
 }

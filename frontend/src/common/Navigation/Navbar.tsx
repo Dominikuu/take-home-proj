@@ -13,13 +13,11 @@ import {MENU_CONFIG} from 'router/Router';
 import NotificationPanel from 'common/NotificationPanel/NotificationPanel'
 import AuthModal from 'common/AuthModal/AuthModal';
 import {logout, checkAuth} from 'lib/auth/auth.action';
-import {LogLevel} from 'api/user/notifications'
-import {getUserUnreadCount} from 'api/user/notifications/unread-count'
+import {loadOffers} from 'lib/offer/offer.action'
+
 import {Avatar,  AccountCircleIcon, Tooltip, SearchIcon, CircularProgress, Box, Autocomplete} from 'lib/mui-shared';
 import logo from 'assets/img/logo.png';
 import './Navbar.scss';
-
-const SEARCH_DAY_BEFORE = 60 * 60 * 24*24
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -170,6 +168,10 @@ const NavBar = () => {
 
   }
 
+  useEffect(() => {
+    dispatch(loadOffers());
+  }, []);
+
   return (
     <>
       <Navbar expanded={expand} fixed="top" expand="md" className={(navColour ? 'sticky' : 'navbar') + ' Navbar'}>
@@ -267,16 +269,6 @@ const NavBar = () => {
                               <div className="title">
                                 <span>{option['title']}</span>
                               </div>
-                              {/* <div className="sub-title">
-                                <div className="category">
-                                  <Chip size="small" label={capitalize(option.category)} color={CategroryColor[option.category]} variant="outlined" />
-                                </div>
-                                <Stack className="tags" direction="row" spacing={1}>
-                                  {option['tags'].map((tag, idx) => (
-                                    <Chip key={idx} label={capitalize(tag)} size="small"/>
-                                  ))}
-                                </Stack>
-                              </div> */}
                             </Box>
 
                         }

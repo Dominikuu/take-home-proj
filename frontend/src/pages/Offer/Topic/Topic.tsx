@@ -474,7 +474,7 @@ const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
                         </IconButton>
                       </Tooltip>
                     </Item>
-                    { user && (
+                    { (
                       <>
                         {!order && (<Item elevation={0}>
                           <Tooltip title={bookmark? "Remove bookmark": "Add to bookmark"}>
@@ -483,7 +483,7 @@ const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
                             </IconButton>
                           </Tooltip>
                         </Item>)}
-                        {!topic.closed &&
+                       
                           (<Item elevation={0}>
                             <Button
                               variant="primary"
@@ -493,7 +493,7 @@ const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
                             >
                               Reply
                             </Button>
-                          </Item>)}
+                          </Item>)
                       </>)
                     }
                   </Stack>

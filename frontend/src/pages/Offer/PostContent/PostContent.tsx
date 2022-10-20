@@ -41,29 +41,28 @@ const PostContent = ({snackbarShowMessage}: PostContentProp) => {
   }>({title: '', category: '', posts: [], tags: [], is_pinned: false, likes: [], closed: false, hidden: false});
   const postsEndRef = useRef<null | HTMLDivElement>(null);
   const history = useNavigate();
-  // const getPost = async () => {
-  //   const {data} = await getOnePost(offerId);
-  //   const posts = [
-  //     {
-  //       content: data.content,
-  //       likes: data.likes,
-  //       reply_count: data.comments.length,
-  //       author: data.author,
-  //       create_time: data.create_time,
-  //       edit_time: data.edit_time,
-  //       is_pinned: data.is_pinned,
-  //       views: data.views,
-  //       cover: data.cover,
-  //       closed: data.closed,
-  //       hidden: data.hidden
-  //     },
-  //     ...data.comments
-  //   ];
-  //   const {title, category, tags, is_pinned, likes, closed, hidden} = data;
-  //   const newPost = {posts, title, category, tags, is_pinned, likes, closed, hidden};
-  //   setPost(newPost);
-  //   EventBus.publish(BlockEventType.ShowTitleOnNav, newoffer.title);
-  // };
+  const getPost =  (data) => {
+    const posts = [
+      {
+        content: data.content,
+        likes: data.likes,
+        reply_count: data.comments.length,
+        author: data.author,
+        create_time: data.create_time,
+        edit_time: data.edit_time,
+        is_pinned: data.is_pinned,
+        views: data.views,
+        cover: data.cover,
+        closed: data.closed,
+        hidden: data.hidden
+      },
+      ...data.comments
+    ];
+    const {title, category, tags, is_pinned, likes, closed, hidden} = data;
+    const newPost = {posts, title, category, tags, is_pinned, likes, closed, hidden};
+    setOffer(offer)
+    EventBus.publish(BlockEventType.ShowTitleOnNav, newPost.title);
+  };
 
   const scrollToBottom = () => {
     postsEndRef.current?.scrollIntoView({behavior: 'smooth'});
@@ -86,12 +85,13 @@ const PostContent = ({snackbarShowMessage}: PostContentProp) => {
 
   useEffect(() => {
     const offer = offerState.offer.find(({id})=> offerId === id)
-    console.log(offerState)
-    setOffer(offer)
+    if (!offer) {
+      return
+    } 
+    getPost(offer)
+    
   }, [offerState])
   
-
-
 
   return (
     <Container className="PostContent">
@@ -103,7 +103,7 @@ const PostContent = ({snackbarShowMessage}: PostContentProp) => {
       <Row>
         <div className="TopicTitle">
           <h1>
-            {offer.is_pinned ? <PushPinIcon /> : null}
+            {offer && offer.is_pinned ? <PushPinIcon /> : null}
             <span>{offer.title}</span>
           </h1>
         </div>

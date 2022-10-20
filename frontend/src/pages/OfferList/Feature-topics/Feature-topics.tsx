@@ -150,6 +150,8 @@ const FeatureTopics = (prop) => {
   const authState = useSelector((state: {auth: any}) => state.auth);
   const offerState = useSelector((state: {offer: any}) => state.offer);
   const queryParams = useRef({skip: 0, limit: 10, ...getQueryFromUrl(urlSearchParams)});
+  
+
   const getPosts = async () => {
     // setIsLoading(true)
     const resp = await listAllPosts(queryParams.current);
@@ -395,24 +397,27 @@ const FeatureTopics = (prop) => {
       }
     });
 
-  useEffect(() => {
-    (async () => {
-      await getPosts();
-      EventBus.on(BlockEventType.ChangeFilter, (selection: {[group: string]: Set<string>}) => {
-        const array_query = {};
-        for (const group of Object.keys(selection)) {
-          array_query[group] = Array.from(selection[group]);
-        }
-        queryParams.current = {skip: 0, limit: 10, ...array_query};
-        getPosts();
-      });
-    })();
-  }, [authState]);
+  // useEffect(() => {
+  //   (async () => {
+  //     await getPosts();
+  //     EventBus.on(BlockEventType.ChangeFilter, (selection: {[group: string]: Set<string>}) => {
+  //       const array_query = {};
+  //       for (const group of Object.keys(selection)) {
+  //         array_query[group] = Array.from(selection[group]);
+  //       }
+  //       queryParams.current = {skip: 0, limit: 10, ...array_query};
+  //       getPosts();
+  //     });
+  //   })();
+  // }, [authState]);
 
   useEffect(() => {
-    console.log("STATE CHANGE", offerState.offer)
     setPosts(offerState.offer)
+    console.log(offerState.offer)
   }, [offerState]);
+  useEffect(() => {
+    console.log(offerState.offer)
+  }, []);
 
   return (
     <Container className="FeatureTopics block">
