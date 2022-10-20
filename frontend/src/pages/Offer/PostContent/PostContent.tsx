@@ -6,7 +6,6 @@ import withSnackbar, {WithSnackProps, SnackbarMessage} from 'common/Snackbar/Sna
 import {useNavigate, useParams} from 'react-router-dom';
 import {styled} from '@mui/material/styles';
 import {Link, Chip, PushPinIcon, Paper} from 'lib/mui-shared';
-import {getOnePost} from 'api/post';
 import EventBus from 'eventing-bus';
 import {BlockEventType, CategroryColor} from 'common/shared.definition';
 import './PostContent.scss';
