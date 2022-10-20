@@ -2,12 +2,13 @@ export enum BlockEventType {
     /**
      * Display Topic title on Nav after scrolling
      */
-    ShowTitleOnNav = 'ShowTitleOnNav',
+    UploadCompensationCsv = 'UploadCompensationCsv',
     CreateNewComment = 'CreateNewComment',
     DeleteComment = 'DeleteComment',
     ChangeFilter = 'ChangeFilter',
     ShowSnackbarMessage = 'ShowSnackbarMessage',
     ToggleDrawer = 'ToggleDrawer',
+    ShowTitleOnNav = 'ShowTitleOnNav',
 }
 export interface Error {
     [errKey: string]: string;

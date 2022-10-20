@@ -8,19 +8,11 @@ import EventBus from 'eventing-bus';
 import {get} from 'lodash';
 import {createTheme, styled, ThemeProvider, Theme} from '@mui/material/styles';
 
-import {BlockEventType, CategroryColor} from 'common/shared.definition';
+import {BlockEventType} from 'common/shared.definition';
 import {listAllPosts, deleteManyPosts} from 'api/post';
 
 import {useNavigate, useLocation} from 'react-router-dom';
-import {
-  LoadingButton,
-  Tooltip,
-  IconButton,
-  Fab,
-  KeyboardArrowUpIcon,
-  ShareIcon,
-  AddIcon
-} from 'lib/mui-shared';
+import {LoadingButton, Tooltip, IconButton, Fab, KeyboardArrowUpIcon, ShareIcon, AddIcon} from 'lib/mui-shared';
 import {TimeFormatter} from 'lib/formatter/time';
 import {CountFormatter} from 'lib/formatter/count';
 import {withStyles} from '@material-ui/core';
@@ -145,6 +137,7 @@ const FeatureTopics = (prop) => {
   const [page, setPage] = useState<number>(0);
   const [posts, setPosts] = useState<any[]>([]);
   const [total, setTotal] = useState<number>(0);
+  const [columns, setColumns] = useState<any[]>([]);
   const [selectIds, setSelectIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const authState = useSelector((state: {auth: any}) => state.auth);
@@ -165,8 +158,8 @@ const FeatureTopics = (prop) => {
 
   const history = useNavigate();
   const onAddClicked = () => {
-    console.log('CLICKE ADD')
-    EventBus.publish(BlockEventType.ToggleDrawer, {isOpen: true})
+    console.log('CLICKE ADD');
+    EventBus.publish(BlockEventType.ToggleDrawer, {isOpen: true});
   };
   const deletePosts = async () => {
     prop.closeDialog();
@@ -178,74 +171,75 @@ const FeatureTopics = (prop) => {
     setSelectIds(postIds);
   };
 
-  const columns = [
-    {
-      name: 'id',
-      label: 'Id',
-      options: {
-        filter: false,
-        display: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          const rowIndex = tableMeta.rowIndex;
-          if (rowIndex === posts.length - 5) {
-            return (
-              <Fragment>
-                {/* <Waypoint
-                  onEnter={buildTestData.bind(this)}
-                  onLeave={()=>{console.log('onLeave')}}
-                /> */}
-                {value}*{rowIndex}
-              </Fragment>
-            );
-          } else {
-            return <Fragment></Fragment>;
-          }
-        }
-      }
-    },
-    {label: 'Job title', name: 'jobTitle'},
-    {label: 'Salary', name: 'salary'},
-    {label: 'Bonus', name: 'bonus'},
-    {label: 'Culture', name: 'cult'},
-    {label: 'Bonus', name: 'bonus'},
-    // {label: 'Latest Post', name: 'create_time'},
-    {
-      label: 'Share link',
-      name: 'share',
-      options: {
-        customBodyRender: (isAdded, tableMeta, updateValue) => {
-          const offerId = posts[tableMeta.rowIndex].id;
-          return (
-            <Tooltip title="Share link">
-            <IconButton component="span" size="small" onClick={(e)=>copyToClipboard(e, offerId)}>
-              <ShareIcon />
-            </IconButton>
-          </Tooltip>
-          );
-        }
-      }
-    }
-  ];
+  // const columns = [
+  //   {
+  //     name: 'id',
+  //     label: 'Id',
+  //     options: {
+  //       filter: false,
+  //       display: false,
+  //       customBodyRender: (value, tableMeta, updateValue) => {
+  //         const rowIndex = tableMeta.rowIndex;
+  //         if (rowIndex === posts.length - 5) {
+  //           return (
+  //             <Fragment>
+  //               {/* <Waypoint
+  //                 onEnter={buildTestData.bind(this)}
+  //                 onLeave={()=>{console.log('onLeave')}}
+  //               /> */}
+  //               {value}*{rowIndex}
+  //             </Fragment>
+  //           );
+  //         } else {
+  //           return <Fragment></Fragment>;
+  //         }
+  //       }
+  //     }
+  //   },
+  //   {label: 'Job title', name: 'jobTitle'},
+  //   {label: 'Salary', name: 'salary'},
+  //   {label: 'Bonus', name: 'bonus'},
+  //   {label: 'Culture', name: 'cult'},
+  //   {label: 'Bonus', name: 'bonus'},
+  //   // {label: 'Latest Post', name: 'create_time'},
+  //   {
+  //     label: 'Share link',
+  //     name: 'share',
+  //     options: {
+  //       customBodyRender: (isAdded, tableMeta, updateValue) => {
+  //         const offerId = posts[tableMeta.rowIndex].id;
+  //         return (
+  //           <Tooltip title="Share link">
+  //             <IconButton component="span" size="small" onClick={(e) => copyToClipboard(e, offerId)}>
+  //               <ShareIcon />
+  //             </IconButton>
+  //           </Tooltip>
+  //         );
+  //       }
+  //     }
+  //   }
+  // ];
 
   const unsecuredCopyToClipboard = (text: string) => {
-    const textArea = document.createElement("textarea");
-    textArea.value=text;
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
     document.body.appendChild(textArea);
-    textArea.focus();textArea.select();
-    try{
-      document.execCommand('copy')
-    }catch(err){
-      console.error('Unable to copy to clipboard',err)
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand('copy');
+    } catch (err) {
+      console.error('Unable to copy to clipboard', err);
     }
-    document.body.removeChild(textArea)
+    document.body.removeChild(textArea);
   };
 
   const copyToClipboard = (event, offerId: string) => {
     if (event) {
-      event.stopPropagation()
-      event.preventDefault()
+      event.stopPropagation();
+      event.preventDefault();
     }
-    const targetAchorUrl = `${window.location.origin}/#/offer/${offerId}`
+    const targetAchorUrl = `${window.location.origin}/#/offer/${offerId}`;
     if (window.isSecureContext && navigator.clipboard) {
       navigator.clipboard.writeText(targetAchorUrl);
     } else {
@@ -267,16 +261,9 @@ const FeatureTopics = (prop) => {
   };
 
   const options = {
-    selectableRowsHeader: get(authState, 'user.role') === 'ADMIN',
-    selectableRowsHideCheckboxes: get(authState, 'user.role') !== 'ADMIN',
     print: false,
-    
     download: false,
-    onRowClick: (rowData, {rowIndex}, e) => {
-      history(`/offer/${posts[rowIndex].id}`);
-    },
     filter: true,
-    serverSide: true,
     rowsPerPage: 10,
     rowsPerPageOptions: [10, 30, 100],
     count: total,
@@ -394,28 +381,21 @@ const FeatureTopics = (prop) => {
         }
       }
     });
+  useEffect(() => {
+    EventBus.on(BlockEventType.UploadCompensationCsv, ({data}) => {
+      console.log(Object.keys(data[0]).map((col) => ({label: col, name: col})));
+      setColumns(Object.keys(data[0]).map((col) => ({label: col, name: col})));
+      setPosts(data);
+    });
+  }, []);
 
   useEffect(() => {
-    (async () => {
-      await getPosts();
-      EventBus.on(BlockEventType.ChangeFilter, (selection: {[group: string]: Set<string>}) => {
-        const array_query = {};
-        for (const group of Object.keys(selection)) {
-          array_query[group] = Array.from(selection[group]);
-        }
-        queryParams.current = {skip: 0, limit: 10, ...array_query};
-        getPosts();
-      });
-    })();
-  }, [authState]);
-
-  useEffect(() => {
-    console.log("STATE CHANGE", offerState.offer)
-    setPosts(offerState.offer)
+    setPosts(offerState.offer);
   }, [offerState]);
 
   return (
     <Container className="FeatureTopics block">
+      <h3 className="label">Compensation data</h3>
       <ThemeProvider theme={getMuiTheme()}>
         <MUIDataTable data={posts} columns={columns} options={options} />
       </ThemeProvider>

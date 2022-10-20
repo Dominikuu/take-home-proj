@@ -49,6 +49,7 @@ export { default as Tabs} from '@mui/material/Tabs';
 export { default as Tab} from '@mui/material/Tab';
 export { default as FormHelperText} from '@mui/material/FormHelperText';
 export { default as InputLabel} from '@mui/material/InputLabel';
+export { default as SwipeableDrawer} from '@mui/material/SwipeableDrawer';
 
 // Icon
 export { default as ErrorIcon} from "@material-ui/icons/Error";

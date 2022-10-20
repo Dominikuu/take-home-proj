@@ -91,17 +91,10 @@ const NavBar = () => {
     clone[index] = value;
     setStatus(clone);
   };
-  // Long polling to get latest unread count
   useInterval(() => {
     getUnreadCount().catch(console.error);;
   }, POLLING_INTERVAL, !isLoggedIn)
 
-  useEffect(() => {
-    const ssoToken = searchParams.get('ssoToken')
-    if (!isLoggedIn) {
-      dispatch(checkAuth(ssoToken));
-    }
-  }, [searchParams]);
 
   useEffect(() => {
     setTitle(null);
@@ -116,12 +109,7 @@ const NavBar = () => {
   }, []);
 
   const getUnreadCount =async () => {
-    const {data} = await getUserUnreadCount({
-      start_time: Math.round(Date.now()/1000 - SEARCH_DAY_BEFORE),
-      end_time: Math.round(Date.now()/1000),
-      log_levels: [LogLevel.Info]
-    })
-    setUnreadCount(data)
+    setUnreadCount(0)
   }
 
   useEffect(() => {

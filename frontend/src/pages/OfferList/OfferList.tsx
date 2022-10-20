@@ -1,17 +1,10 @@
 import {useEffect, useState} from 'react';
 import {BlockEventType} from 'common/shared.definition';
 import EventBus from 'eventing-bus';
-import Sidebar from 'common/Sidebar/Sidebar';
 import EditPost from './EditPost/EditPost';
 import OfferTable from './Feature-topics/Feature-topics';
 import './OfferList.scss';
-import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-
-const styles = {
-  BackdropProps: {
-    background: 'transparent'
-  }
-};
+import {SwipeableDrawer} from 'lib/mui-shared';
 
 const OfferList = () => {
   
@@ -30,15 +23,12 @@ const OfferList = () => {
   };
   useEffect(() => {
     EventBus.on(BlockEventType.ToggleDrawer, ({isOpen}) => {
-      console.log(isOpen);
       setOpen(isOpen);
-      // toggleDrawer(isOpen);
     });
   }, []);
   return (
     <>
       <section>
-        <Sidebar />
         <OfferTable onCreate={toggleDrawer} />
       </section>
       <SwipeableDrawer  

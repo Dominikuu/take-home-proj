@@ -1,6 +1,5 @@
 import {useParams} from 'react-router-dom';
 import PostContent from './PostContent/PostContent';
-import LinkPanel from './LinkPanel/LinkPanel'
 import './Offer.scss';
 
 const Offer = () => {
@@ -8,7 +7,6 @@ const Offer = () => {
   return (
     <section>
       <PostContent key={'post_content' + offerId}></PostContent>
-      {/* <LinkPanel key={ 'link_panel'+ offerId}></LinkPanel> */}
     </section>
   );
 };

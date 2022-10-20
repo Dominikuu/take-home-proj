@@ -86,7 +86,7 @@ const PostContent = ({snackbarShowMessage}: PostContentProp) => {
 
   useEffect(() => {
     const offer = offerState.offer.find(({id})=> offerId === id)
-    console.log(offer)
+    console.log(offerState)
     setOffer(offer)
   }, [offerState])
   
@@ -106,44 +106,6 @@ const PostContent = ({snackbarShowMessage}: PostContentProp) => {
             {offer.is_pinned ? <PushPinIcon /> : null}
             <span>{offer.title}</span>
           </h1>
-          {/* <div className="subtitle">
-            <div className="category">
-              <Chip
-                size="small"
-                label={capitalize(offer.category)}
-                color={CategroryColor[offer.category]}
-                variant="outlined"
-                onClick={
-                  (evt)=>{
-                    onChipClicked(evt, 'category', offer.category)
-                  }
-                }/>
-            </div>
-            <div className="tag">
-              {offer.tags.length ? (
-                <Paper
-                  elevation={0}
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    flexWrap: 'wrap',
-                    listStyle: 'none',
-                    p: 0.3,
-                    m: 0
-                  }}
-                  component="ul"
-                >
-                  {offer.tags.map((tag, i) => {
-                    return (
-                      <ListItem key={i}>
-                        <Chip label={capitalize(tag)} size="small" onClick={(evt)=>{onChipClicked(evt, 'tags', tag)}}/>
-                      </ListItem>
-                    );
-                  })}
-                </Paper>
-              ) : null}
-            </div>
-          </div> */}
         </div>
       </Row>
       <Container>
