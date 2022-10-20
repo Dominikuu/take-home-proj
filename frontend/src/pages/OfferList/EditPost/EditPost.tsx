@@ -1,26 +1,20 @@
 import {useState, useEffect} from 'react';
 import {cloneDeep, isEqual} from 'lodash';
-import {useParams} from 'react-router-dom';
 import {Row, Col} from 'react-bootstrap';
 
 import draftToHtml from 'draftjs-to-html';
 import {styled} from '@mui/material/styles';
-import ImageUpload from 'common/ImageUpload/ImageUpload';
 import withSnackbar from 'common/Snackbar/Snackbar';
-import {Link, LoadingButton} from 'lib/mui-shared';
-import {createOffer} from 'lib/offer/offer.action'
+import {Link, LoadingButton, Divider} from 'lib/mui-shared';
+import {createOffer} from 'lib/offer/offer.action';
 import {BlockEventType} from 'common/shared.definition';
 import EventBus from 'eventing-bus';
 import {useDispatch} from 'react-redux';
 import {Dispatch} from 'redux';
 import InputField from 'common/InputField/InputField';
-import UtfSwtich from 'common/Switch/Switch';
-import UtfToggleButtonGroup from 'common/ToggleButtonGroup/ToggleButtonGroup';
 import CustomToolbarEditor from 'common/CustomToolbarEditor/CustomToolbarEditor';
-import {Role} from 'App';
 import './EditPost.scss';
-import {CATEGORY_OPTIONS, TAG_OPTIONS, INIT_STATE} from './EditPost.definition';
-
+import {INIT_STATE} from './EditPost.definition';
 
 const ActionButton = styled(LoadingButton)({
   background: '#fff',
@@ -41,11 +35,9 @@ const ActionButton = styled(LoadingButton)({
 });
 
 const EditPost = (prop) => {
-  const {postId} = useParams<{postId: string}>() as {postId: string};
   const [isFormChanged, setIsFormChanged] = useState<boolean>(false);
   const [originForm, setOriginForm] = useState(cloneDeep(INIT_STATE.fields));
   const [loading, setLoading] = useState<boolean>(false);
-  const [uploadedImages, setUploadedImages] = useState([]);
   const dispatch: Dispatch<any> = useDispatch();
 
   const [form, setForm] = useState(cloneDeep(INIT_STATE.fields));
@@ -98,58 +90,41 @@ const EditPost = (prop) => {
     setLoading(true);
     const offer = cloneDeep(form);
     evt.preventDefault(); // prevents page from reloading on submit
-    dispatch(createOffer(offer))
+    offer.content = draftToHtml(offer.content);
+    dispatch(createOffer(offer));
     // if (this.validate()) return;
-    
+
     prop.snackbarShowMessage('Saved successfully').then((onClosed) => {
-      
-      EventBus.publish(BlockEventType.ToggleDrawer, {isOpen: false})
-      
+      EventBus.publish(BlockEventType.ToggleDrawer, {isOpen: false});
     });
-  
     setLoading(false);
-    
   };
   const onResetClick = () => {
     setForm(cloneDeep(originForm));
     setIsFormChanged(false);
   };
 
-  // const uploadImageCallBack = async (file) => {
-  //   const existedImages = cloneDeep(uploadedImages);
-  //   const formData = new FormData();
-  //   formData.append('files', file);
-  //   const imgUrl = await createPostImage(formData);
-  //   const imageObject = {
-  //     file: file,
-  //     localSrc: URL.createObjectURL(file)
-  //   };
-
-  //   existedImages.push(imageObject);
-  //   setUploadedImages(existedImages);
-  //   return Promise.resolve({data: {link: imgUrl.data}});
-  // };
-
   useEffect(() => {
     (async () => {
-      
       setForm(cloneDeep(INIT_STATE.fields));
       setOriginForm(cloneDeep(INIT_STATE.fields));
       setLoading(false);
     })();
-    EventBus.on(BlockEventType.ToggleDrawer, ({payload}) => {
-      console.log(payload);
-    });
   }, []);
 
   return (
     <section className="EditPost">
       <Row>
-        <Link className="link" underline="none" onClick={()=>EventBus.publish(BlockEventType.ToggleDrawer, {isOpen: false})}>
+        <Link
+          className="link"
+          underline="none"
+          onClick={() => EventBus.publish(BlockEventType.ToggleDrawer, {isOpen: false})}
+        >
           {'<< Back'}
         </Link>
       </Row>
-      <h4>Create/Edit Topic</h4>
+      <h1>Create/Edit Topic</h1>
+      <Divider />
       <form>
         <h2>Monetary compensation</h2>
         <Row>
@@ -214,16 +189,14 @@ const EditPost = (prop) => {
             ></InputField>
           </Col>
         </Row>
-        
+
         <Row>
           <CustomToolbarEditor
             formControlName="content"
             value={content}
             name="Description"
             onChange={onInputChange}
-            toolbar={{
-            
-            }}
+            toolbar={{}}
           ></CustomToolbarEditor>
         </Row>
         <Row className="btn-container">

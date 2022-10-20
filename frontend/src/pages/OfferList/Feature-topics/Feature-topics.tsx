@@ -1,26 +1,17 @@
 import React, {Fragment, useMemo, useEffect, useState, useRef, CSSProperties, MouseEvent} from 'react';
 import {Container, Row, Button} from 'react-bootstrap';
 import {useSelector} from 'react-redux';
-import {get as getProp, capitalize, cloneDeep} from 'lodash';
-
+import {get as getProp, cloneDeep} from 'lodash';
+import withSnackbar, {SnackbarMessage} from 'common/Snackbar/Snackbar';
 import MUIDataTable from 'mui-datatables';
 import EventBus from 'eventing-bus';
 import {get} from 'lodash';
 import {createTheme, styled, ThemeProvider, Theme} from '@mui/material/styles';
 
-import {BlockEventType, CategroryColor} from 'common/shared.definition';
-import {listAllPosts, deleteManyPosts} from 'api/post';
+import {BlockEventType} from 'common/shared.definition';
 
 import {useNavigate, useLocation} from 'react-router-dom';
-import {
-  LoadingButton,
-  Tooltip,
-  IconButton,
-  Fab,
-  KeyboardArrowUpIcon,
-  ShareIcon,
-  AddIcon
-} from 'lib/mui-shared';
+import {LoadingButton, Tooltip, IconButton, Fab, KeyboardArrowUpIcon, ShareIcon, AddIcon} from 'lib/mui-shared';
 import {TimeFormatter} from 'lib/formatter/time';
 import {CountFormatter} from 'lib/formatter/count';
 import {withStyles} from '@material-ui/core';
@@ -40,7 +31,7 @@ export interface Offer {
   salary: number;
   bonus: number;
   culture: string;
-  learnihg: string;
+  learning: string;
   description: string;
 }
 export enum TableAction {
@@ -110,8 +101,7 @@ const ReadmoreButton = styled(LoadingButton)({
   }
 });
 
-const convertToTable = (responseBody, authState): Offer[] => {
-  const bookmarks = get(authState, 'user.bookmarks');
+const convertToTable = (responseBody): Offer[] => {
   return responseBody.map(
     ({post_id, likes, hidden, title, category, tags, is_pinned, author, create_time, replies, views}) => {
       return {
@@ -121,7 +111,6 @@ const convertToTable = (responseBody, authState): Offer[] => {
         views: CountFormatter.countAbbr(views),
         create_time: TimeFormatter.timeSince(new Date(create_time)),
         replies,
-        bookmark: bookmarks && bookmarks.some((_post) => _post === post_id),
         hidden
       };
     }
@@ -150,29 +139,25 @@ const FeatureTopics = (prop) => {
   const authState = useSelector((state: {auth: any}) => state.auth);
   const offerState = useSelector((state: {offer: any}) => state.offer);
   const queryParams = useRef({skip: 0, limit: 10, ...getQueryFromUrl(urlSearchParams)});
-  
 
   const getPosts = async () => {
-    // setIsLoading(true)
-    const resp = await listAllPosts(queryParams.current);
-    setPosts([...convertToTable(resp.data.data, authState)]);
-    setTotal(resp.data.total);
+    setPosts([...convertToTable({})]);
+    setTotal(300);
     setIsLoading(false);
   };
 
   const getPartialPosts = async () => {
-    const resp = await listAllPosts(queryParams.current);
-    setPosts([...posts, ...convertToTable(resp.data.data, authState)]);
+    const resp = {data: {data: {}}};
+    setPosts([...posts, ...convertToTable(resp.data.data)]);
   };
 
   const history = useNavigate();
   const onAddClicked = () => {
-    console.log('CLICKE ADD')
-    EventBus.publish(BlockEventType.ToggleDrawer, {isOpen: true})
+    console.log('CLICKE ADD');
+    EventBus.publish(BlockEventType.ToggleDrawer, {isOpen: true});
   };
   const deletePosts = async () => {
     prop.closeDialog();
-    await deleteManyPosts(selectIds);
     await getPosts();
   };
   const onSelectRows = (currentRowsSelected, allRowsSelected, rowsSelected: number[]) => {
@@ -192,10 +177,6 @@ const FeatureTopics = (prop) => {
           if (rowIndex === posts.length - 5) {
             return (
               <Fragment>
-                {/* <Waypoint
-                  onEnter={buildTestData.bind(this)}
-                  onLeave={()=>{console.log('onLeave')}}
-                /> */}
                 {value}*{rowIndex}
               </Fragment>
             );
@@ -208,9 +189,9 @@ const FeatureTopics = (prop) => {
     {label: 'Job title', name: 'jobTitle'},
     {label: 'Salary', name: 'salary'},
     {label: 'Bonus', name: 'bonus'},
-    {label: 'Culture', name: 'cult'},
-    {label: 'Bonus', name: 'bonus'},
-    // {label: 'Latest Post', name: 'create_time'},
+    {label: 'Culture', name: 'culture'},
+    {label: 'Learning opportunity', name: 'learning'},
+    {label: 'Latest Post', name: 'create_time'},
     {
       label: 'Share link',
       name: 'share',
@@ -219,41 +200,46 @@ const FeatureTopics = (prop) => {
           const offerId = posts[tableMeta.rowIndex].id;
           return (
             <Tooltip title="Share link">
-            <IconButton component="span" size="small" onClick={(e)=>copyToClipboard(e, offerId)}>
-              <ShareIcon />
-            </IconButton>
-          </Tooltip>
+              <IconButton component="span" size="small" onClick={(e) => copyToClipboard(e, offerId)}>
+                <ShareIcon />
+              </IconButton>
+            </Tooltip>
           );
         }
       }
     }
   ];
 
+  const onShowSnackbarMessage = ({message, type}: SnackbarMessage) => {
+    prop.snackbarShowMessage(message, type || 'success');
+  };
+
   const unsecuredCopyToClipboard = (text: string) => {
-    const textArea = document.createElement("textarea");
-    textArea.value=text;
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
     document.body.appendChild(textArea);
-    textArea.focus();textArea.select();
-    try{
-      document.execCommand('copy')
-    }catch(err){
-      console.error('Unable to copy to clipboard',err)
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand('copy');
+    } catch (err) {
+      console.error('Unable to copy to clipboard', err);
     }
-    document.body.removeChild(textArea)
+    document.body.removeChild(textArea);
   };
 
   const copyToClipboard = (event, offerId: string) => {
     if (event) {
-      event.stopPropagation()
-      event.preventDefault()
+      event.stopPropagation();
+      event.preventDefault();
     }
-    const targetAchorUrl = `${window.location.origin}/#/offer/${offerId}`
+    const targetAchorUrl = `${window.location.origin}/#/offer/${offerId}`;
     if (window.isSecureContext && navigator.clipboard) {
       navigator.clipboard.writeText(targetAchorUrl);
     } else {
       unsecuredCopyToClipboard(targetAchorUrl);
     }
-    EventBus.publish(BlockEventType.ShowSnackbarMessage, {message: 'Copied to clipboard!', type: null});
+    onShowSnackbarMessage({message: 'Copied to clipboard!', type: 'success'});
   };
 
   const onTableTakeAction = (action: TableAction, tableState) => {
@@ -272,7 +258,6 @@ const FeatureTopics = (prop) => {
     selectableRowsHeader: get(authState, 'user.role') === 'ADMIN',
     selectableRowsHideCheckboxes: get(authState, 'user.role') !== 'ADMIN',
     print: false,
-    
     download: false,
     onRowClick: (rowData, {rowIndex}, e) => {
       history(`/offer/${posts[rowIndex].id}`);
@@ -397,27 +382,13 @@ const FeatureTopics = (prop) => {
       }
     });
 
-  // useEffect(() => {
-  //   (async () => {
-  //     await getPosts();
-  //     EventBus.on(BlockEventType.ChangeFilter, (selection: {[group: string]: Set<string>}) => {
-  //       const array_query = {};
-  //       for (const group of Object.keys(selection)) {
-  //         array_query[group] = Array.from(selection[group]);
-  //       }
-  //       queryParams.current = {skip: 0, limit: 10, ...array_query};
-  //       getPosts();
-  //     });
-  //   })();
-  // }, [authState]);
-
   useEffect(() => {
-    setPosts(offerState.offer)
-    console.log(offerState.offer)
+    const postList = cloneDeep(offerState.offer).map((el) => {
+      el.create_time = TimeFormatter.timeSince(new Date(el.create_time));
+      return el;
+    });
+    setPosts(postList);
   }, [offerState]);
-  useEffect(() => {
-    console.log(offerState.offer)
-  }, []);
 
   return (
     <Container className="FeatureTopics block">
@@ -435,13 +406,17 @@ const FeatureTopics = (prop) => {
       </Row>
       <Container className="fixed-btn">
         <Fab size="small" color="error" aria-label="add" onClick={onAddClicked}>
-          <AddIcon />
+          <Tooltip title="Create new offer">
+            <AddIcon />
+          </Tooltip>
         </Fab>
         <Fab size="small" color="error" aria-label="top" onClick={scrollToTop}>
-          <KeyboardArrowUpIcon />
+          <Tooltip title="To top">
+            <KeyboardArrowUpIcon />
+          </Tooltip>
         </Fab>
       </Container>
     </Container>
   );
 };
-export default withStyles(styles as {})(WithDialog(FeatureTopics));
+export default withStyles(styles as {})(withSnackbar(WithDialog(FeatureTopics)));

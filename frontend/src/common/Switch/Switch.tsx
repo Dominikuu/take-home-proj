@@ -1,5 +1,5 @@
 import React, {useState, useEffect, ChangeEvent} from 'react';
-import Switch from '@mui/material/Switch';
+import MuiSwitch from '@mui/material/Switch';
 import {Error, FormCtrlProps} from 'common/shared.definition';
 import './Switch.scss';
 
@@ -7,7 +7,7 @@ interface SwitchProps<T> extends FormCtrlProps<T> {
   exclusive?: boolean;
   value: T;
 }
-const UtfSwtich: React.FC<SwitchProps<boolean>> = ({value, formControlName, name, validate, onChange}) => {
+const Switch: React.FC<SwitchProps<boolean>> = ({value, formControlName, name, validate, onChange}) => {
   const [state, setState] = useState<{value: boolean; error: boolean | Error}>({
     value,
     error: false
@@ -26,14 +26,11 @@ const UtfSwtich: React.FC<SwitchProps<boolean>> = ({value, formControlName, name
   return (
     <div className="Switch">
       <div className="label">{name}</div>
-      <Switch checked={state.value} onChange={handleChange} />
+      <MuiSwitch checked={state.value} onChange={handleChange} />
 
-      {state.error? 
-        <div className="ui visible warning message">{Object.values(state.error)[0]}</div>
-        : null
-      }
+      {state.error ? <div className="ui visible warning message">{Object.values(state.error)[0]}</div> : null}
     </div>
   );
 };
 
-export default UtfSwtich;
+export default Switch;

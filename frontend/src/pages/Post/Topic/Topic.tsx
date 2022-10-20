@@ -1,5 +1,5 @@
 import {useState, useEffect, useRef} from 'react';
-import {get, set, cloneDeep} from 'lodash'
+import {get, set, cloneDeep} from 'lodash';
 import {Row} from 'react-bootstrap';
 import {useParams, useNavigate} from 'react-router-dom';
 import {useSelector} from 'react-redux';
@@ -9,16 +9,13 @@ import EventBus from 'eventing-bus';
 import {useDispatch} from 'react-redux';
 import {Dispatch} from 'redux';
 import PopperMenu, {Option as PopperMenuOption} from 'common/PopperMenu/PopperMenu';
-import {listAllCommentReplies, deleteOneComment, getOneComment} from 'api/comment';
-import {updateOneCommentHide} from 'api/post/comment/hide';
-import {updateOnePostHide} from 'api/post/hide';
-import {updateOnePostClose} from 'api/post/close';
-import {updateOneLike, updateOneUnlike} from 'api/post/like';
-import {updateOneBookmarks, RequestBody as UpdateBookmarkRequestBody, Action as BookmarkAction} from 'api/user/bookmark';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
 
-import {Paper, Stack, Avatar,
+import {
+  Paper,
+  Stack,
+  Avatar,
   IconButton,
   EditIcon,
   Tooltip,
@@ -32,12 +29,11 @@ import {Paper, Stack, Avatar,
   ModeCommentIcon,
   LockIcon,
   DoNotDisturbOnIcon,
-  ShareIcon, VisibilityOffIcon
+  ShareIcon,
+  VisibilityOffIcon
 } from 'lib/mui-shared';
-import {saveViewHistory} from 'lib/viewHistory/veiwHistory.action';
 import {BlockEventType} from 'common/shared.definition';
 import './Topic.scss';
-import Comment from '../Comment/Comment';
 import CommentEditor from '../CommentEditor/CommentEditor';
 
 enum CommentAccess {
@@ -50,52 +46,52 @@ interface Like {
   total: number;
 }
 
-interface TopicProp{
-  info: any,
-  order: number,
-  ancestor: any,
-  onDeleteReply: any
+interface TopicProp {
+  info: any;
+  order: number;
+  ancestor: any;
+  onDeleteReply: any;
 }
-enum MenuKey{
- Hide= 'HIDE',
- Close= 'CLOSE',
- Edit= 'EDIT',
- Delete= 'DELETE',
+enum MenuKey {
+  Hide = 'HIDE',
+  Close = 'CLOSE',
+  Edit = 'EDIT',
+  Delete = 'DELETE'
 }
 const POPPERMENUOPTION: PopperMenuOption[] = [
   {
-    icon: <VisibilityOffIcon/>,
+    icon: <VisibilityOffIcon />,
     label: 'Hide',
     key: MenuKey.Hide,
-    onClick: ()=>{},
+    onClick: () => {},
     disabled: false,
     hidden: false
   },
   {
-    icon: <DoNotDisturbOnIcon/>,
+    icon: <DoNotDisturbOnIcon />,
     label: 'Close',
     key: MenuKey.Close,
-    onClick: ()=>{},
+    onClick: () => {},
     disabled: false,
     hidden: false
   },
   {
-    icon: <EditIcon/>,
+    icon: <EditIcon />,
     label: 'Edit',
     key: MenuKey.Edit,
-    onClick: ()=>{},
+    onClick: () => {},
     disabled: false,
     hidden: false
   },
   {
-    icon: <DeleteForeverIcon/>,
+    icon: <DeleteForeverIcon />,
     label: 'Delete',
     key: MenuKey.Delete,
-    onClick: ()=>{},
+    onClick: () => {},
     disabled: false,
     hidden: false
   }
-]
+];
 
 const Item = styled(Paper)(({theme}) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -107,12 +103,12 @@ const Item = styled(Paper)(({theme}) => ({
 }));
 
 const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
-  const [topic, setTopic] = useState(cloneDeep(info))
+  const [topic, setTopic] = useState(cloneDeep(info));
   const [isLoading, setIsLoading] = useState(false);
   const {postId} = useParams<{postId: string}>() as {postId: string};
   const [like, setLike] = useState<Like>({isLiked: false, total: 0});
-  const [popperMenuOptions, setPopperMenuOptions] = useState<PopperMenuOption[]>(POPPERMENUOPTION)
-  const [bookmark, setBookmark] = useState<boolean>(false)
+  const [popperMenuOptions, setPopperMenuOptions] = useState<PopperMenuOption[]>(POPPERMENUOPTION);
+  const [bookmark, setBookmark] = useState<boolean>(false);
   const [replyCount, setReplyCount] = useState<number>(0);
   const [comments, setComments] = useState<Comment[]>([]);
   const [open, setOpen] = useState(false);
@@ -121,15 +117,15 @@ const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
   const {user} = useSelector((state: {auth: any}) => state.auth);
   const history = useNavigate();
   const dispatch: Dispatch<any> = useDispatch();
-  const topicElement = useRef<null | HTMLDivElement>(null);;
+  const topicElement = useRef<null | HTMLDivElement>(null);
 
-  const handleViewComment = async ()=>{
-    const {data} = await getOneComment({postId, commentId: topic.comment_id});
-    setTopic({...topic, content: data.content})
-  }
+  const handleViewComment = async () => {
+    const {data} = {data: {content: ''}};
+    setTopic({...topic, content: data.content});
+  };
 
   const handleViewReplies = async () => {
-    const {data} = await listAllCommentReplies({postId, commentId: topic.comment_id});
+    const {data} = {data: []};
     setComments(data);
     setReplyCount(data.length);
   };
@@ -147,12 +143,12 @@ const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
     }
   };
 
-  const handleEditorReload = async(isLoading: boolean) => {
+  const handleEditorReload = async (isLoading: boolean) => {
     if (!isLoading) {
       await handleViewComment();
     }
     setIsLoading(isLoading);
-  }
+  };
 
   const handleCreateReload = async (isLoading: boolean) => {
     if (!isLoading) {
@@ -176,7 +172,7 @@ const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
 
   const openDeleteConfirmModal = async () => {
     setIsLoading(true);
-    await deleteOneComment({postId: topic.post_id, commentId: topic.comment_id});
+
     // Refresh
     if (!ancestor.length) {
       EventBus.publish(BlockEventType.DeleteComment);
@@ -189,22 +185,16 @@ const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
 
   const openHideConfirmModal = async () => {
     setIsLoading(true);
-    const isHidden = !topic.hidden
-    console.log(isHidden)
-    const reqBody = {hidden: isHidden}
+    const isHidden = !topic.hidden;
+    console.log(isHidden);
+    const reqBody = {hidden: isHidden};
     try {
-      if (topic.comment_id) {
-        await updateOneCommentHide(postId, topic.comment_id, reqBody)
-      } else {
-        await updateOnePostHide(postId, reqBody)
-      }
       // Refresh
-      set(topic, 'hidden', isHidden)
-      setTopic(topic)
-      configActionOptions({hidden: isHidden, closed: topic.closed})
-
-    } catch(e) {
-      console.error(e)
+      set(topic, 'hidden', isHidden);
+      setTopic(topic);
+      configActionOptions({hidden: isHidden, closed: topic.closed});
+    } catch (e) {
+      console.error(e);
     } finally {
       setIsLoading(false);
     }
@@ -212,13 +202,12 @@ const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
 
   const openCloseConfirmModal = async () => {
     setIsLoading(true);
-    const isClosed = !topic.closed
-    const reqBody = {closed: isClosed}
-    await updateOnePostClose(postId, reqBody);
+    const isClosed = !topic.closed;
+    const reqBody = {closed: isClosed};
     // Refresh
-    set(topic, 'closed', isClosed)
-    setTopic(topic)
-    configActionOptions({hidden: topic.hidden, closed: isClosed})
+    set(topic, 'closed', isClosed);
+    setTopic(topic);
+    configActionOptions({hidden: topic.hidden, closed: isClosed});
 
     setIsLoading(false);
   };
@@ -231,38 +220,37 @@ const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
   };
 
   const onLikeClick = async () => {
-    if(!user) {
-      return
+    if (!user) {
+      return;
     }
-    const reqBody = {post_id: postId, user_id: user._id, comment_id: topic.comment_id};
-    const {data} = await updateOneLike(reqBody);
-    setLike({isLiked: true, total: data});
+
+    setLike({isLiked: true, total: 5});
   };
 
   const onUnlikeClick = async () => {
-    if(!user) {
-      return
+    if (!user) {
+      return;
     }
     const reqBody = {post_id: postId, user_id: user._id, comment_id: topic.comment_id};
-    const {data} = await updateOneUnlike(reqBody);
-    setLike({isLiked: false, total: data});
+    setLike({isLiked: false, total: 74});
   };
 
   const unsecuredCopyToClipboard = (text: string) => {
-    const textArea = document.createElement("textarea");
-    textArea.value=text;
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
     document.body.appendChild(textArea);
-    textArea.focus();textArea.select();
-    try{
-      document.execCommand('copy')
-    }catch(err){
-      console.error('Unable to copy to clipboard',err)
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand('copy');
+    } catch (err) {
+      console.error('Unable to copy to clipboard', err);
     }
-    document.body.removeChild(textArea)
+    document.body.removeChild(textArea);
   };
 
   const copyToClipboard = (level: string) => {
-    const targetAchorUrl = `${window.location.origin}/#/post/${postId}#${level}`
+    const targetAchorUrl = `${window.location.origin}/#/post/${postId}#${level}`;
     if (window.isSecureContext && navigator.clipboard) {
       navigator.clipboard.writeText(targetAchorUrl);
     } else {
@@ -271,77 +259,60 @@ const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
     EventBus.publish(BlockEventType.ShowSnackbarMessage, {message: 'Copied to clipboard!', type: null});
   };
 
-  const onBookmarkClicked =  async ()=>{
-    const isAddedToBookMark = bookmark
-    const reqBody: UpdateBookmarkRequestBody = {
-      action: isAddedToBookMark ? BookmarkAction.Remove: BookmarkAction.Add,
-      post: postId
-    }
-    try {
-      const resp = await updateOneBookmarks(reqBody)
-      setBookmark(!bookmark)
-      EventBus.publish(BlockEventType.ShowSnackbarMessage, {message: 'Bookmark is '+ (isAddedToBookMark ? BookmarkAction.Remove: BookmarkAction.Add), type: null});
+  const onBookmarkClicked = () => {};
 
-    } catch(e) {
-      EventBus.publish(BlockEventType.ShowSnackbarMessage, {message: e, type: 'error'});
-    }
-  }
-
-  const configActionOptions = ({hidden, closed})=>{
-    const newPopperMenuOptions = cloneDeep(POPPERMENUOPTION)
-    const isAuthor = topic.author.author_id === (user && user._id)
-    const isPost = !order? true: false
+  const configActionOptions = ({hidden, closed}) => {
+    const newPopperMenuOptions = cloneDeep(POPPERMENUOPTION);
+    const isAuthor = topic.author.author_id === (user && user._id);
+    const isPost = !order ? true : false;
     for (const option of newPopperMenuOptions) {
       switch (option.key) {
         case MenuKey.Hide:
-          option.hidden = false
-          option.label = hidden? 'Show': 'Hide'
-          option.onClick = openHideConfirmModal.bind(this)
+          option.hidden = false;
+          option.label = hidden ? 'Show' : 'Hide';
+          option.onClick = openHideConfirmModal.bind(this);
           break;
         case MenuKey.Close:
-          option.hidden = order? true: false
-          option.label = closed? 'Open to Reply': 'Close'
-          option.onClick = openCloseConfirmModal.bind(this)
+          option.hidden = order ? true : false;
+          option.label = closed ? 'Open to Reply' : 'Close';
+          option.onClick = openCloseConfirmModal.bind(this);
           break;
         case MenuKey.Edit:
-          option.hidden = !isAuthor
-          option.onClick = handleEditorToggle.bind(this)
+          option.hidden = !isAuthor;
+          option.onClick = handleEditorToggle.bind(this);
           break;
         case MenuKey.Delete:
-          option.hidden = !(isAuthor && !isPost)
-          option.onClick = openDeleteConfirmModal.bind(this)
+          option.hidden = !(isAuthor && !isPost);
+          option.onClick = openDeleteConfirmModal.bind(this);
           break;
         default:
           break;
       }
     }
-    setPopperMenuOptions(newPopperMenuOptions)
-  }
+    setPopperMenuOptions(newPopperMenuOptions);
+  };
 
   useEffect(() => {
     if (!topicElement.current || !document) {
       return;
     }
 
-    const url = window.location.href
-    const anchorId = url.substring(url.lastIndexOf("#") + 1, url.length);
+    const url = window.location.href;
+    const anchorId = url.substring(url.lastIndexOf('#') + 1, url.length);
 
-    if(anchorId === [...ancestor, order].join('-')){
-      setTimeout(()=>{
-        topicElement.current?.scrollIntoView({ behavior: "smooth" });
-      }, 1000)
+    if (anchorId === [...ancestor, order].join('-')) {
+      setTimeout(() => {
+        topicElement.current?.scrollIntoView({behavior: 'smooth'});
+      }, 1000);
     }
-
-
-  }, [])
+  }, []);
 
   useEffect(() => {
-    dispatch(saveViewHistory(postId))
     if (topic.likes) {
       setLike({isLiked: topic.likes.some(({user_id}) => user_id === (user && user._id)), total: topic.likes.length});
     }
     setReplyCount(topic.reply_count);
-    configActionOptions({hidden: topic.hidden, closed: topic.closed})
+    configActionOptions({hidden: topic.hidden, closed: topic.closed});
   }, [info]);
 
   return (
@@ -352,33 +323,35 @@ const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
         open={isLoading}
         // onClick={handleClose}
       >
-      <CircularProgress color="inherit" />
+        <CircularProgress color="inherit" />
       </Backdrop>
       <div className="body">
         <div className="heading">
           <div className="meta">
             <div className="avator">
-              <Avatar  sx={{ height: '48px', width: '48px' }} alt={topic.author.username} src={topic.author.avatar} />
+              <Avatar sx={{height: '48px', width: '48px'}} alt={topic.author.username} src={topic.author.avatar} />
             </div>
 
             <div className="auth">
               <div className="name">
                 <span className="role">
-                  <span>{topic.author ? (topic.author.username  || 'Anonymous') : ''}</span>
+                  <span>{topic.author ? topic.author.username || 'Anonymous' : ''}</span>
                 </span>
-                <span className='private-icon'>
-                  {(topic.access === CommentAccess.Private && get(topic, 'author.username')?
+                <span className="private-icon">
+                  {topic.access === CommentAccess.Private && get(topic, 'author.username') ? (
                     <Tooltip title={CommentAccess.Private}>
-                      <LockIcon/>
+                      <LockIcon />
                     </Tooltip>
-                    : '')}
+                  ) : (
+                    ''
+                  )}
                 </span>
                 <span className="hidden">
-                  {topic.hidden &&
-                    (<Tooltip title='Hidden'>
-                      <VisibilityOffIcon/>
-                    </Tooltip>)
-                  }
+                  {topic.hidden && (
+                    <Tooltip title="Hidden">
+                      <VisibilityOffIcon />
+                    </Tooltip>
+                  )}
                 </span>
               </div>
               <div className="datetime">
@@ -392,16 +365,19 @@ const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
                 ) : null}
               </div>
             </div>
-            {topic.access === CommentAccess.Private && !topic.author? `(${CommentAccess.Private})`: null}
+            {topic.access === CommentAccess.Private && !topic.author ? `(${CommentAccess.Private})` : null}
           </div>
           <div className="corner">
             {order ? <div className="order">#{[...ancestor, order].join('-')}</div> : null}
-            {user && !popperMenuOptions.every(({hidden})=>hidden)? <PopperMenu options={popperMenuOptions}></PopperMenu> : null}
+            {user && !popperMenuOptions.every(({hidden}) => hidden) ? (
+              <PopperMenu options={popperMenuOptions}></PopperMenu>
+            ) : null}
           </div>
         </div>
-        {
-          !order || topic.access === CommentAccess.Public || (topic.access === CommentAccess.Private && get(topic, 'author.username'))? (
-          <div className='content'>
+        {!order ||
+        topic.access === CommentAccess.Public ||
+        (topic.access === CommentAccess.Private && get(topic, 'author.username')) ? (
+          <div className="content">
             <div className="cooked">
               {openEditor ? (
                 <CommentEditor
@@ -411,13 +387,12 @@ const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
                   onReload={handleEditorReload}
                 ></CommentEditor>
               ) : (
-
                 // renderHTML(topic.content)
-                <div dangerouslySetInnerHTML={{ __html: topic.content }}></div>
+                <div dangerouslySetInnerHTML={{__html: topic.content}}></div>
               )}
             </div>
             <div className="cover">
-              <img alt="cover" src={topic.cover}/>
+              <img alt="cover" src={topic.cover} />
             </div>
             <section className="menu-area">
               <nav className="controls">
@@ -437,8 +412,8 @@ const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
                           <IconButton component="span" size="small">
                             <VisibilityIcon />
                             <span className="count">{topic.views}</span>
-                            </IconButton>
-                      </Tooltip>
+                          </IconButton>
+                        </Tooltip>
                       </Item>
                     ) : null}
                     <Item elevation={0}>
@@ -469,22 +444,28 @@ const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
                   <Stack direction="row" spacing={2}>
                     <Item elevation={0}>
                       <Tooltip title="Share link">
-                        <IconButton component="span" size="small" onClick={()=>copyToClipboard([...ancestor, order].join('-'))}>
+                        <IconButton
+                          component="span"
+                          size="small"
+                          onClick={() => copyToClipboard([...ancestor, order].join('-'))}
+                        >
                           <ShareIcon />
                         </IconButton>
                       </Tooltip>
                     </Item>
-                    { user && (
+                    {user && (
                       <>
-                        {!order && (<Item elevation={0}>
-                          <Tooltip title={bookmark? "Remove bookmark": "Add to bookmark"}>
-                            <IconButton component="span" size="small" onClick={onBookmarkClicked}>
-                              <BookmarksIcon color={bookmark? 'error': undefined} />
-                            </IconButton>
-                          </Tooltip>
-                        </Item>)}
-                        {!topic.closed &&
-                          (<Item elevation={0}>
+                        {!order && (
+                          <Item elevation={0}>
+                            <Tooltip title={bookmark ? 'Remove bookmark' : 'Add to bookmark'}>
+                              <IconButton component="span" size="small" onClick={onBookmarkClicked}>
+                                <BookmarksIcon color={bookmark ? 'error' : undefined} />
+                              </IconButton>
+                            </Tooltip>
+                          </Item>
+                        )}
+                        {!topic.closed && (
+                          <Item elevation={0}>
                             <Button
                               variant="primary"
                               onClick={() => setCreatorOpen(!openCreator)}
@@ -493,23 +474,19 @@ const Topic = ({info, order, ancestor, onDeleteReply}: TopicProp) => {
                             >
                               Reply
                             </Button>
-                          </Item>)}
-                      </>)
-                    }
+                          </Item>
+                        )}
+                      </>
+                    )}
                   </Stack>
                 </div>
               </nav>
             </section>
-            {topic.closed && <section className="topicClosed">
-              This topic is CLOSED
-            </section>}
+            {topic.closed && <section className="topicClosed">This topic is CLOSED</section>}
           </div>
-          ): (
-            <div className='content private'>
-              {CommentAccess.Private}
-            </div>
-          )
-        }
+        ) : (
+          <div className="content private">{CommentAccess.Private}</div>
+        )}
       </div>
       <Collapse in={openCreator}>
         <div

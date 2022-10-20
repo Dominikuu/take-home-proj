@@ -7,8 +7,6 @@ import './OfferList.scss';
 import {SwipeableDrawer} from 'lib/mui-shared';
 
 const OfferList = () => {
-  
-
   const [open, setOpen] = useState<boolean>(false);
   const toggleDrawer = (isOpen: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
     if (
@@ -31,13 +29,17 @@ const OfferList = () => {
       <section>
         <OfferTable onCreate={toggleDrawer} />
       </section>
-      <SwipeableDrawer  
+      <SwipeableDrawer
         sx={{
-          drawer: {
-            background: 'red'
-          }}
-        } 
-        anchor="bottom" open={open} onClose={toggleDrawer(false)} onOpen={toggleDrawer(true)}>
+          '& .MuiDrawer-paper': {
+            justifyContent: 'center'
+          }
+        }}
+        anchor="bottom"
+        open={open}
+        onClose={toggleDrawer(false)}
+        onOpen={toggleDrawer(true)}
+      >
         <EditPost />
       </SwipeableDrawer>
     </>

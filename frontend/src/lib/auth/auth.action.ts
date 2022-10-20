@@ -1,6 +1,3 @@
-import {AnyAction, Dispatch} from 'redux';
-import {checkOne as checkOneSsotoken, getOneUserProfile} from 'api/user';
-
 export enum ActionType {
     REGISTER_SUCCESS = 'REGISTER_SUCCESS',
     REGISTER_FAIL = 'REGISTER_FAIL',
@@ -8,7 +5,7 @@ export enum ActionType {
     LOGIN_FAIL = 'LOGIN_FAIL',
     LOGOUT = 'LOGOUT',
     CHECK_AUTH = 'CHECK_AUTH',
-    UPDATE_PROFILE = 'UPDATE_PROFILE'
+    UPDATE_PROFILE = 'UPDATE_PROFILE',
 }
 
 export function checkAuth(ssoToken: string | null) {
@@ -17,19 +14,19 @@ export function checkAuth(ssoToken: string | null) {
         isLoggedIn: true,
         user: {},
     };
-    let jwtToken = localStorage.getItem('token') || ''
-    return  async (dispatch: DispatchType) => {
-        if(!jwtToken) {
-          const resp = await checkOneSsotoken({ssoToken})
-          jwtToken = resp.data.token
-          localStorage.setItem('token', jwtToken)
-        
-        } 
-        const {data: profile} = await getOneUserProfile();
-        action.user = {...profile, jwtToken} || {};
-        
-        dispatch(action);
+    let jwtToken = localStorage.getItem('token') || '';
+    return async (dispatch: DispatchType) => {
+        if (!jwtToken) {
+            //   const resp = await checkOneSsotoken({ssoToken})
+            //   jwtToken = resp.data.token
+            //   localStorage.setItem('token', jwtToken)
 
+            // }
+            // const {data: profile} = await getOneUserProfile();
+            // action.user = {...profile, jwtToken} || {};
+
+            dispatch(action);
+        }
     };
 }
 
@@ -49,11 +46,11 @@ export function logout() {
         isLoggedIn: false,
         user: null,
     };
-    localStorage.removeItem('token')
+    localStorage.removeItem('token');
     window.location.reload();
     return (dispatch: DispatchType) => {
-      dispatch(action)
-    }
+        dispatch(action);
+    };
 }
 
 export function updateProfile(profile) {
@@ -63,8 +60,8 @@ export function updateProfile(profile) {
         user: profile,
     };
     return (dispatch: DispatchType) => {
-        dispatch(action)
-    }
+        dispatch(action);
+    };
 }
 
 export function makeHttpRequest(action: AuthAction, ssoToken?: string) {

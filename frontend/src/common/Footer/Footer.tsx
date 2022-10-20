@@ -28,21 +28,19 @@ const Footer = () => {
         </div>
         <div className="col-lg-5 col-md-12 footer-contact">
           <div className="contact">
-            <h4 className="widget-title">
-              Follow us
-            </h4>
+            <h4 className="widget-title">Follow us</h4>
           </div>
           <p className="social-icons">
-            <a href="https://www.facebook.com/UniTik-Technology-Inc-109218971333501" target="_blank" rel="noreferrer">
+            <a href="/" target="_blank" rel="noreferrer">
               <img src={fb} alt="fb" />
             </a>
-            <a href="https://www.instagram.com/unitik_tech/" target="_blank" rel="noreferrer">
+            <a href="/" target="_blank" rel="noreferrer">
               <img src={ig} alt="ig" />
             </a>
-            <a href="https://twitter.com/UnitikT" target="_blank" rel="noreferrer">
+            <a href="/" target="_blank" rel="noreferrer">
               <img src={twitter} alt="twitter" />
             </a>
-            <a href="https://www.linkedin.com/in/unitik-technology-a51170212/" target="_blank" rel="noreferrer">
+            <a href="/" target="_blank" rel="noreferrer">
               <img src={linkedin} alt="linkedin" />
             </a>
           </p>

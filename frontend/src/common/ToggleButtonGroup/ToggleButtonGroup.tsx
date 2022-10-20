@@ -1,5 +1,5 @@
 import React, {useState, useEffect, MouseEvent} from 'react';
-import {ToggleButtonGroup, ToggleButton} from 'lib/mui-shared'
+import {ToggleButtonGroup as MuiToggleButtonGroup, ToggleButton} from 'lib/mui-shared';
 import {Error, FormCtrlProps} from 'common/shared.definition';
 import './ToggleButtonGroup.scss';
 
@@ -7,7 +7,7 @@ interface ToggleButtonGroupProps<T> extends FormCtrlProps<T> {
   options: {label: string; value: any}[];
   exclusive?: boolean;
 }
-const UtfToggleButtonGroup: React.FC<ToggleButtonGroupProps<string | string[]>> = ({
+const ToggleButtonGroup: React.FC<ToggleButtonGroupProps<string | string[]>> = ({
   value,
   formControlName,
   name,
@@ -18,7 +18,7 @@ const UtfToggleButtonGroup: React.FC<ToggleButtonGroupProps<string | string[]>> 
   options,
   exclusive
 }) => {
-  const [state, setState] = useState<{value: string|string[], error: boolean | Error}>({
+  const [state, setState] = useState<{value: string | string[]; error: boolean | Error}>({
     value,
     error: false
   });
@@ -37,7 +37,12 @@ const UtfToggleButtonGroup: React.FC<ToggleButtonGroupProps<string | string[]>> 
   return (
     <div className="ToggleButtonGroup">
       <div className="label">{name}</div>
-      <ToggleButtonGroup value={state.value} exclusive={exclusive} onChange={handleChange} aria-label="text alignment">
+      <MuiToggleButtonGroup
+        value={state.value}
+        exclusive={exclusive}
+        onChange={handleChange}
+        aria-label="text alignment"
+      >
         {options?.map(({value, label}, i) => {
           return (
             <ToggleButton key={i} value={value} aria-label={value}>
@@ -45,14 +50,11 @@ const UtfToggleButtonGroup: React.FC<ToggleButtonGroupProps<string | string[]>> 
             </ToggleButton>
           );
         })}
-      </ToggleButtonGroup>
+      </MuiToggleButtonGroup>
 
-      {state.error?
-        <div className="ui visible warning message">{Object.values(state.error)[0]}</div>
-        : null
-      }
+      {state.error ? <div className="ui visible warning message">{Object.values(state.error)[0]}</div> : null}
     </div>
   );
 };
 
-export default UtfToggleButtonGroup;
+export default ToggleButtonGroup;

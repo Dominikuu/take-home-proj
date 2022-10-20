@@ -1,6 +1,6 @@
 import React, {useState, useEffect, ChangeEvent} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import {MenuItem, TextField} from 'lib/mui-shared'
+import {makeStyles} from '@material-ui/core/styles';
+import {MenuItem, TextField} from 'lib/mui-shared';
 
 import {Error, FormCtrlProps} from 'common/shared.definition';
 import './Select.scss';
@@ -11,22 +11,21 @@ interface SelectProps<T> extends FormCtrlProps<T> {
   options: {name: string; code: string}[];
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     width: 170
   },
   dense: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(2)
   },
   menu: {
-    width: 200,
-  },
+    width: 200
+  }
 }));
 
-
-const UtSelect: React.FC<SelectProps<string>> = ({value, formControlName, name, options, validate, onChange}) => {
+const Select: React.FC<SelectProps<string>> = ({value, formControlName, name, options, validate, onChange}) => {
   const classes = useStyles();
   const [state, setState] = useState<{value: string; error: boolean | Error}>({
     value,
@@ -50,9 +49,9 @@ const UtSelect: React.FC<SelectProps<string>> = ({value, formControlName, name, 
       <TextField
         sx={{
           marginTop: 1,
-          '& legend': { display: 'none' },
-          '& fieldset': { top: 0 },
-          }}
+          '& legend': {display: 'none'},
+          '& fieldset': {top: 0}
+        }}
         select
         className={classes.textField}
         value={state.value}
@@ -60,21 +59,22 @@ const UtSelect: React.FC<SelectProps<string>> = ({value, formControlName, name, 
         InputLabelProps={{shrink: false}}
         SelectProps={{
           MenuProps: {
-            className: classes.menu,
-          },
+            className: classes.menu
+          }
         }}
         margin="normal"
         variant="outlined"
       >
-        {options.map(({name, code})=><MenuItem key={code} value={code}>{name}</MenuItem>)}
+        {options.map(({name, code}) => (
+          <MenuItem key={code} value={code}>
+            {name}
+          </MenuItem>
+        ))}
       </TextField>
 
-      {state.error? 
-        <div className="ui visible warning message">{Object.values(state.error)[0]}</div>
-        : null
-      }
+      {state.error ? <div className="ui visible warning message">{Object.values(state.error)[0]}</div> : null}
     </div>
   );
 };
 
-export default UtSelect;
+export default Select;

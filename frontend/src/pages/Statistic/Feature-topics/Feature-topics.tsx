@@ -1,7 +1,7 @@
 import React, {Fragment, useMemo, useEffect, useState, useRef, CSSProperties, MouseEvent} from 'react';
 import {Container, Row, Button} from 'react-bootstrap';
 import {useSelector} from 'react-redux';
-import {get as getProp, capitalize, cloneDeep} from 'lodash';
+import {get as getProp} from 'lodash';
 
 import MUIDataTable from 'mui-datatables';
 import EventBus from 'eventing-bus';
@@ -9,10 +9,9 @@ import {get} from 'lodash';
 import {createTheme, styled, ThemeProvider, Theme} from '@mui/material/styles';
 
 import {BlockEventType} from 'common/shared.definition';
-import {listAllPosts, deleteManyPosts} from 'api/post';
 
-import {useNavigate, useLocation} from 'react-router-dom';
-import {LoadingButton, Tooltip, IconButton, Fab, KeyboardArrowUpIcon, ShareIcon, AddIcon} from 'lib/mui-shared';
+import {useLocation} from 'react-router-dom';
+import {LoadingButton, Fab, KeyboardArrowUpIcon, ShareIcon, AddIcon} from 'lib/mui-shared';
 import {TimeFormatter} from 'lib/formatter/time';
 import {CountFormatter} from 'lib/formatter/count';
 import {withStyles} from '@material-ui/core';
@@ -145,80 +144,28 @@ const FeatureTopics = (prop) => {
   const queryParams = useRef({skip: 0, limit: 10, ...getQueryFromUrl(urlSearchParams)});
   const getPosts = async () => {
     // setIsLoading(true)
-    const resp = await listAllPosts(queryParams.current);
+    const resp = {data: {data: [], total: 0}};
     setPosts([...convertToTable(resp.data.data, authState)]);
     setTotal(resp.data.total);
     setIsLoading(false);
   };
 
   const getPartialPosts = async () => {
-    const resp = await listAllPosts(queryParams.current);
+    const resp = {data: {data: []}};
     setPosts([...posts, ...convertToTable(resp.data.data, authState)]);
   };
 
-  const history = useNavigate();
   const onAddClicked = () => {
-    console.log('CLICKE ADD');
     EventBus.publish(BlockEventType.ToggleDrawer, {isOpen: true});
   };
   const deletePosts = async () => {
     prop.closeDialog();
-    await deleteManyPosts(selectIds);
     await getPosts();
   };
   const onSelectRows = (currentRowsSelected, allRowsSelected, rowsSelected: number[]) => {
     const postIds = rowsSelected.map((index: number) => posts[index].id);
     setSelectIds(postIds);
   };
-
-  // const columns = [
-  //   {
-  //     name: 'id',
-  //     label: 'Id',
-  //     options: {
-  //       filter: false,
-  //       display: false,
-  //       customBodyRender: (value, tableMeta, updateValue) => {
-  //         const rowIndex = tableMeta.rowIndex;
-  //         if (rowIndex === posts.length - 5) {
-  //           return (
-  //             <Fragment>
-  //               {/* <Waypoint
-  //                 onEnter={buildTestData.bind(this)}
-  //                 onLeave={()=>{console.log('onLeave')}}
-  //               /> */}
-  //               {value}*{rowIndex}
-  //             </Fragment>
-  //           );
-  //         } else {
-  //           return <Fragment></Fragment>;
-  //         }
-  //       }
-  //     }
-  //   },
-  //   {label: 'Job title', name: 'jobTitle'},
-  //   {label: 'Salary', name: 'salary'},
-  //   {label: 'Bonus', name: 'bonus'},
-  //   {label: 'Culture', name: 'cult'},
-  //   {label: 'Bonus', name: 'bonus'},
-  //   // {label: 'Latest Post', name: 'create_time'},
-  //   {
-  //     label: 'Share link',
-  //     name: 'share',
-  //     options: {
-  //       customBodyRender: (isAdded, tableMeta, updateValue) => {
-  //         const offerId = posts[tableMeta.rowIndex].id;
-  //         return (
-  //           <Tooltip title="Share link">
-  //             <IconButton component="span" size="small" onClick={(e) => copyToClipboard(e, offerId)}>
-  //               <ShareIcon />
-  //             </IconButton>
-  //           </Tooltip>
-  //         );
-  //       }
-  //     }
-  //   }
-  // ];
 
   const unsecuredCopyToClipboard = (text: string) => {
     const textArea = document.createElement('textarea');
@@ -232,20 +179,6 @@ const FeatureTopics = (prop) => {
       console.error('Unable to copy to clipboard', err);
     }
     document.body.removeChild(textArea);
-  };
-
-  const copyToClipboard = (event, offerId: string) => {
-    if (event) {
-      event.stopPropagation();
-      event.preventDefault();
-    }
-    const targetAchorUrl = `${window.location.origin}/#/offer/${offerId}`;
-    if (window.isSecureContext && navigator.clipboard) {
-      navigator.clipboard.writeText(targetAchorUrl);
-    } else {
-      unsecuredCopyToClipboard(targetAchorUrl);
-    }
-    EventBus.publish(BlockEventType.ShowSnackbarMessage, {message: 'Copied to clipboard!', type: null});
   };
 
   const onTableTakeAction = (action: TableAction, tableState) => {
@@ -383,7 +316,6 @@ const FeatureTopics = (prop) => {
     });
   useEffect(() => {
     EventBus.on(BlockEventType.UploadCompensationCsv, ({data}) => {
-      console.log(Object.keys(data[0]).map((col) => ({label: col, name: col})));
       setColumns(Object.keys(data[0]).map((col) => ({label: col, name: col})));
       setPosts(data);
     });
@@ -409,9 +341,9 @@ const FeatureTopics = (prop) => {
         ) : null}
       </Row>
       <Container className="fixed-btn">
-        <Fab size="small" color="error" aria-label="add" onClick={onAddClicked}>
+        {/* <Fab size="small" color="error" aria-label="add" onClick={onAddClicked}>
           <AddIcon />
-        </Fab>
+        </Fab> */}
         <Fab size="small" color="error" aria-label="top" onClick={scrollToTop}>
           <KeyboardArrowUpIcon />
         </Fab>

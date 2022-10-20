@@ -22,6 +22,7 @@ const FileUpload = (props) => {
     <div>
       {/* File Uploader */}
       <h3 className="label">Upload CSV</h3>
+      <p>Please use salary_survey-3.csv</p>
       <input
         type="file"
         name="file"
