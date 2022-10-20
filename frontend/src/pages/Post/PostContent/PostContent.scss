@@ -1,0 +1,16 @@
+@import "styles/page.layout";
+.PostContent {
+    .TopicArea {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .TopicTitle{
+        .subtitle {
+            display: flex;
+            align-items: center;
+        }
+    }
+    .link {
+        color: #b81c25;
+    }
+}

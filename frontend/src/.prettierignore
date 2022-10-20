@@ -1,0 +1,5 @@
+/dist
+/libs
+/node_modules
+/src/assets
+/src/i18n.crowdin

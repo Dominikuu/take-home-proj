@@ -71,7 +71,7 @@ PostgresSqlDao.prototype.save = function (entity) {
     return promise;
 };
 
-PostgresSqlDao.prototype.find = function (table, fields, id) {
+PostgresSqlDao.prototype.find = function ({table, fields, id}) {
     let self = this;
     
     return new Promise(function (resolve, reject) {

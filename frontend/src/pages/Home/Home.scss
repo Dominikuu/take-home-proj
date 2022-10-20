@@ -1,0 +1,36 @@
+.uop-home {
+    .section1 {
+        font-size: 48px;
+        color: #fff;
+        background: url(/assets/img/TopPage_1_BG.png) no-repeat 0 0;
+        background-size: cover;
+    }
+    .section3 {
+        background: url(/assets/img/TopPage_3_BG.svg) no-repeat 0 0;
+        background-size: cover;
+        min-height: 570px;
+        color: #fff;
+    }
+    .section4 {
+        .left-panel {
+            background: url(/assets/img/TopPage_4_BG-01.svg) no-repeat 0 0;
+            background-size: cover;
+        }
+        .right-panel {
+            background: url(/assets/img/TopPage_4_BG-02.svg) no-repeat 0 0;
+            background-size: cover;
+        }
+    }
+    .section5 {
+        background: url(/assets/img/TopPage_5_BG.svg) no-repeat 0 0;
+        background-size: cover;
+    }
+    .learn-more {
+        color: #c30d23;
+        font-size: 18px;
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

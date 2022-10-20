@@ -16,7 +16,7 @@ const listAllSalary = async (req, res, next, dbDao) => {
     const sortTypeArray = sortType? sortType.split(','): []
     const fieldsArray = fields? fields.split(','): []
 
-    const filtering = ['$and']
+    const filtering = []
     for (const field of allowedFields) {
         const query_field = get(req, `query.${field}`)
         if (query_field) {
@@ -40,7 +40,7 @@ const listAllSalary = async (req, res, next, dbDao) => {
         queryOption['fields']= fieldsArray
     }
     if (filtering.length) {
-        queryOption['filter']= filtering
+        queryOption['filter']= ['$and', ...filtering]
     }
     if (sorting.length) {
         queryOption['sorting']= sorting
@@ -49,28 +49,34 @@ const listAllSalary = async (req, res, next, dbDao) => {
     res.setHeader("Content-Type", "application/json");
     return res
     .status(200)
-    .json(results);
+    .json(JSON.stringify(results));
   
 }
 
 const findOneSalary = async (req, res, next, dbDao) => {
-    const {id} = req.param
-    console.log(id)
+    const {id} = req.params
     const allowedFields = ['jobTitle', 'yearExp']
     const {fields} = req.query
     const fieldsArray = fields? fields.split(','): []
-
     const queryOption = {
         table: 'salary',    
     }
     if (fieldsArray.length) {
         queryOption['fields']= fieldsArray
     }
-    const results = await dbDao.all(queryOption)
-    res.setHeader("Content-Type", "application/json");
-    return res
-    .status(200)
-    .json(results);
+    
+    queryOption['id']= id
+    try {
+        const results = await dbDao.find(queryOption)
+        res.setHeader("Content-Type", "application/json");
+        return res
+        .status(200)
+        .json(JSON.stringify(results));
+    } catch(err){
+        return res
+        .status(400)
+        .json(err);
+    }
   
 }
 module.exports = Object.assign({}, {

@@ -1,0 +1,145 @@
+@import "styles/variables";
+.footer-container {
+    overflow: auto;
+    padding: 0.5rem 1rem 0;
+    border-top: 1px solid #eee;
+    width: 100%;
+    max-width: 1360px;
+    margin: 0 auto;
+    .logo2 {
+        width: 80%;
+    }
+    .policy p {
+        color: #999;
+    }
+    a {
+        color: #222;
+        text-decoration: none;
+    }
+    a:hover,
+    a:focus {
+        color: #c30d23;
+    }
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+    h4+ul li {
+        padding-left: 0;
+        margin-bottom: 0px;
+        line-height: 25px;
+    }
+    .widget-title {
+        margin-top: 0;
+        padding-top: 0;
+    }
+    .copy-right {
+        width: 100%;
+        border-top: 1px solid #fff;
+        position: relative;
+    }
+    .copy-right li {
+        display: inline-block;
+        position: relative;
+        padding-right: 15px;
+    }
+    .icons img {
+        width: 70px !important;
+        height: 70px !important;
+    }
+    .icons img+.desc {
+        margin-top: 30px;
+        margin-bottom: 10px;
+    }
+    .desc {
+        font-size: 21px;
+        color: #4D4D4D;
+        font-weight: bold;
+    }
+    .flex-center {
+        justify-content: center;
+        align-items: center;
+        margin: auto;
+    }
+    .contact {
+      h4 {
+        font-size: 18px;
+      }
+    }
+    .contact img {
+        width: 30px;
+        height: 30px;
+    }
+    .social-icons a {
+        margin-right: 16px;
+    }
+    .social-icons img {
+        width: 2rem;
+        height: 2rem;
+    }
+    .widget-title {
+        margin-bottom: 10px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .cuzform label {
+        font-size: 18px;
+        color: #999;
+    }
+    .policy h4 {
+        margin-bottom: 4px;
+        margin-top: 14px;
+        font-weight: bold;
+    }
+    .policy b {
+        color: black;
+    }
+    .copy-right>div {
+        float: right;
+        position: absolute;
+        top: 10px;
+        right: 0;
+    }
+    .copy-right {
+      p {
+        margin-bottom: 0;
+      }
+    }
+    .footer-contact .logo {
+        max-width: 400px;
+    }
+    @media (max-width: 960px) {
+        footer {
+            padding: 20px 25px 0;
+        }
+        .footer-menu {
+            display: none;
+        }
+        .footer-contact {
+            padding: 0;
+            text-align: center;
+        }
+        .copy-right>div {
+            position: relative;
+            text-align: center;
+            float: none;
+            top: 0;
+        }
+        .icons {
+            margin-bottom: 3rem;
+            ;
+        }
+    }
+    @media (max-width: 960px) {
+        #main .sec3 .title {
+            padding-left: 0;
+        }
+        .dropdown-item {
+            text-align: center;
+        }
+        .flex-reverse {
+            flex-direction: column-reverse;
+        }
+    }
+}

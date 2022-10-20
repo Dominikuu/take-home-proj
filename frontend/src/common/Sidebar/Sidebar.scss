@@ -1,0 +1,48 @@
+@import "styles/variables";
+.Sidebar {
+    padding: 20px 35px 0;
+    width: 220px;
+    flex-shrink: 0;
+    z-index: 10;
+    box-shadow: 0 0 0 hsla(210,8%,5%,0.05);
+    transition: box-shadow ease-in-out .1s,transform ease-in-out .1s;
+    transform: translateZ(0);
+    .sticky-container {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 3.25rem;
+        padding: 1.5rem 0;
+        .group {
+            margin-bottom: 0.5rem;
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items:center;
+                
+                .group-title {
+                    font-weight: 600;
+                    padding: 0.75rem 0;
+                }
+
+            }
+            ul {
+                padding-left: 0;
+
+                li {
+                    display: flex;
+                    justify-content: space-between;
+                    list-style-type: none;
+                    padding: 0.25rem 0;
+                    &.selected {
+                        color: red;
+                    }
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+
+
+}

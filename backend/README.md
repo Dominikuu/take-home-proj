@@ -1,11 +1,10 @@
-# UnitikOfficialBE
+# Backend
 
+## Transform dataset to seed csv
+```
+node db_seed_parsing.js
+```
 
-## Tech stack
-- flask
-- nginx
-- MongoDB
--
 ## Environment setup
 
 ```
@@ -20,70 +19,13 @@ docker-compose up --build -d
 docker-compose down -v
 
 ```
+## Test
+### List many data
+/composation-data?fields=[FIELD ARRAY]&sort=[SORT ARRAY]&sort=[SORTED ARRAY]&[FIELD](['gte'/'gt'/'lte'/'lt'/'ne])
 
-## Build
-```
-$ sudo bash ./scripts/build.sh
-```
-
-## Deploy
-```
-# Copy out\utOfficial.tar.gz to target server
-# Extract
-tar -xf utOfficial.tar.gz
-cd utOfficial
-sudo bash ./scripts/start.sh
-```
+#### Find single data by id
+/composation-data/:ID?fields=[FIELD ARRAY]
 
 ## Other issue
-```
-# Remove usused container
-docker container prune
-```
-## Before commit
-```
-# Use virtualenv to execuate formatter & liniter
-source ./source/bin/activate
-```
-
-## DB authenication for auth
-Step1.
-```
-use admin
-db.createUser(
-  {
-    user: *{{ INIT_USER }}*,
-    pwd: *{{ INIT_PASSWORD }}*,
-    roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
-  }
-)
-```
-
-Step2.
-```
-db.auth(*{{ INIT_USER }}*, *{{ INIT_PASSWORD }}*)
-use auth
-db.createUser(
-  {
-    user: *{{ USER }}*,
-    pwd: *{{ PASSOWRD }}*,
-    roles: [ { role: "readWrite", db: "auth" } ]
-  }
-)
-```
-db.createUser(
-  {
-    user: "unitik",
-    pwd: "90699920",
-    roles: [ { role: "readWrite", db: "auth" } ]
-  }
-)
-## Redis
-Login
-```
-redis-cli auth [username] [password]
-```
-Clear all
-```
-redis-cli flushall
-```
+- gen_random_uuid is supported after postgresql 13.0
+- Version of library "pg" must be 8.x.x
